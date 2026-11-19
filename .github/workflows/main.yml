@@ -22,9 +22,15 @@ jobs:
           java-version: '17'
 
       - name: Настроить Android SDK
-        run: |
-          yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+
+      - name: Установить платформу Android
+        run: sdkmanager "platforms;android-36"
+
+      - name: Установить инструменты сборки
+        run: sdkmanager "build-tools;36.0.0"
 
       - name: Настроить Gradle
         uses: gradle/actions/setup-gradle@v4
