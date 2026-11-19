@@ -10,11 +10,10 @@
     <application
         android:allowBackup="true"
         android:label="WrapVision"
-        android:theme="@style/AppTheme"
-        android:supportsRtl="true">
+        android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.wrapvision.app.MainActivity"
             android:exported="true">
 
             <intent-filter>
@@ -23,5 +22,7 @@
             </intent-filter>
 
         </activity>
+
     </application>
+
 </manifest>
