@@ -1,53 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#101820"
-    android:padding="16dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="WrapVision"
-        android:textColor="#FFFFFF"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:padding="12dp" />
+package com.wrapvision.app
 
-    <TextView
-        android:id="@+id/statusText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Студийный режим"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:gravity="center"
-        android:padding="8dp" />
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import androidx.core.content.ContextCompat
 
-    <androidx.camera.view.PreviewView
-        android:id="@+id/cameraPreview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+class MainActivity : AppCompatActivity() {
 
-    <Button
-        android:id="@+id/selectColorButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Выбрать цвет плёнки" />
+    private lateinit var cameraPreview: PreviewView
+    private lateinit var statusText: TextView
 
-    <Button
-        android:id="@+id/bodyModeButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Весь кузов" />
+    private var selectedMode = "Весь кузов"
 
-    <Button
-        android:id="@+id/partsModeButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Отдельные детали" />
+    private val cameraPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) startCamera()
+        else statusText.text = "Необходимо разрешить доступ к камере"
+    }
 
-</LinearLayout>
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        cameraPreview = findViewById(R.id.cameraPreview)
+        statusText = findViewById(R.id.statusText)
+
+        findViewById<Button>(R.id.bodyModeButton).setOnClickListener {
+            selectedMode = "Весь кузов"
+            statusText.text = selectedMode
+        }
+
+        findViewById<Button>(R.id.partsModeButton).setOnClickListener {
+            selectedMode = "Отдельные детали"
+            statusText.text = selectedMode
+        }
+
+        findViewById<Button>(R.id.selectColorButton).setOnClickListener {
+            statusText.text = "Выбор цвета будет подключён следующим этапом"
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            startCamera()
+        } else {
+            cameraPermission.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun startCamera() {
+        val cameraProviderFuture =
+            ProcessCameraProvider.getInstance(this)
+
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+
+            val preview = Preview.Builder().build()
+            preview.surfaceProvider = cameraPreview.surfaceProvider
+
+            cameraProvider.unbindAll()
+            cameraProvider.bindToLifecycle(
+                this,
+                CameraSelector.DEFAULT_BACK_CAMERA,
+                preview
+            )
+        }, ContextCompat.getMainExecutor(this))
+    }
+}
