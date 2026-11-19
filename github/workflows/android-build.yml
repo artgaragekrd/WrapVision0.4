@@ -14,7 +14,7 @@ jobs:
       - name: Получить исходный код
         uses: actions/checkout@v4
 
-      - name: Установить Java 17
+      - name: Установить Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -22,11 +22,8 @@ jobs:
 
       - name: Установить Android SDK
         uses: android-actions/setup-android@v4
-
-      - name: Установить компоненты Android
-        run: |
-          sdkmanager --licenses
-          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+        with:
+          packages: 'platforms;android-36 build-tools;36.0.0'
 
       - name: Настроить Gradle
         uses: gradle/actions/setup-gradle@v4
