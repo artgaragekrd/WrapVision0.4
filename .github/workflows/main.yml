@@ -23,8 +23,6 @@ jobs:
 
       - name: Установить Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          packages: 'platform-tools'
 
       - name: Установить платформу Android
         run: sdkmanager "platforms;android-36"
@@ -37,12 +35,13 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Собрать приложение
-        run: gradle assembleDebug
+      - name: Собрать приложение с подробным журналом
         working-directory: github/workflows
+        run: gradle assembleDebug --stacktrace --info
 
       - name: Сохранить APK
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: WrapVision-APK
           path: github/workflows/app/build/outputs/apk/debug/app-debug.apk
