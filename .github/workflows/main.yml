@@ -1,49 +1,46 @@
-
-name: Сборка WrapVision APK
+name: WrapVision Android Build
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Получить исходный код
+      - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Установить Java
+      - name: Set up Java 17
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Настроить Android SDK
+      - name: Set up Android SDK
         uses: android-actions/setup-android@v4
-        with:
-          packages: 'platform-tools'
 
-      - name: Установить платформу Android
-        run: sdkmanager "platforms;android-36"
+      - name: Install Android SDK packages
+        run: |
+          sdkmanager "platforms;android-36"
+          sdkmanager "build-tools;36.0.0"
 
-      - name: Установить инструменты сборки
-        run: sdkmanager "build-tools;36.0.0"
-
-      - name: Настроить Gradle
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.11.1'
 
-      - name: Собрать приложение
+      - name: Build WrapVision APK
         working-directory: github/workflows
-        run: gradle assembleDebug --stacktrace --info
+        run: gradle assembleDebug --stacktrace
 
-      - name: Сохранить APK
-        uses: actions/upload-artifact@v4
+      - name: Upload APK
         if: success()
+        uses: actions/upload-artifact@v4
         with:
           name: WrapVision-APK
           path: github/workflows/app/build/outputs/apk/debug/app-debug.apk
+
