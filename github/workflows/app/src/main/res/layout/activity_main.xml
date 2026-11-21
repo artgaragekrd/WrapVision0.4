@@ -1,191 +1,171 @@
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#05090F">
+    android:background="#080B10">
 
     <ScrollView
         android:id="@+id/homeScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:clipToPadding="false"
-        android:background="@drawable/bg_home_premium">
+        android:background="@drawable/bg_home_premium"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="18dp"
-            android:paddingBottom="18dp">
+            android:paddingStart="22dp"
+            android:paddingEnd="22dp"
+            android:paddingTop="28dp"
+            android:paddingBottom="30dp">
 
-            <RelativeLayout
+            <TextView
+                android:id="@+id/brandTitle"
                 android:layout_width="match_parent"
-                android:layout_height="42dp">
-
-                <TextView
-                    android:id="@+id/brandTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="WRAPVISION"
-                    android:textColor="#E8F1FF"
-                    android:textStyle="bold"
-                    android:textSize="27sp"
-                    android:letterSpacing="0.08"
-                    android:shadowColor="#668CCFFF"
-                    android:shadowDx="0"
-                    android:shadowDy="0"
-                    android:shadowRadius="12" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="⚙"
-                    android:textColor="#CDEBFF"
-                    android:textSize="25sp" />
-
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:text="WRAPVISION"
+                android:textColor="#E8EDF5"
+                android:textSize="29sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.22"
+                android:gravity="center"
+                android:shadowColor="#668ACFFF"
+                android:shadowRadius="13"
+                android:shadowDx="0"
+                android:shadowDy="0" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="PREMIUM STUDIO"
+                android:textColor="#6FADEB"
+                android:textSize="10sp"
+                android:letterSpacing="0.42"
                 android:gravity="center"
-                android:text="P R E M I U M   S T U D I O"
-                android:textColor="#19BFFF"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.14"
-                android:paddingBottom="18dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="ТВОЙ АВТОМОБИЛЬ."
-                android:textColor="#DCE4EF"
-                android:textSize="21sp"
-                android:textStyle="bold"
-                android:paddingTop="2dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="ТВОЙ СТИЛЬ."
-                android:textColor="#16BFFF"
-                android:textSize="23sp"
-                android:textStyle="bold"
-                android:paddingBottom="12dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="22dp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="250dp"
                 android:background="@drawable/bg_car_frame"
-                android:padding="2dp">
+                android:padding="8dp"
+                android:elevation="8dp">
 
                 <ImageView
                     android:id="@+id/homeCarImage"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
+                    android:layout_height="match_parent"
                     android:src="@drawable/mustang_home"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
                     android:contentDescription="Автомобиль Mustang" />
 
             </FrameLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="YOUR CAR. YOUR STYLE."
+                android:textColor="#AAB8CA"
+                android:textSize="11sp"
+                android:letterSpacing="0.18"
+                android:gravity="center"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="14dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
                 android:orientation="vertical"
+                android:background="@drawable/bg_premium_panel"
                 android:padding="16dp"
-                android:background="@drawable/bg_premium_panel">
+                android:layout_marginBottom="18dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ВАШ ТЕКУЩИЙ ВЫБОР"
-                    android:textColor="#DCE8F5"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.04" />
+                    android:text="ТЕКУЩИЙ ОБРАЗЕЦ ЦВЕТА"
+                    android:textColor="#8FA7C2"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.12" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/homeColorInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingTop="12dp">
+                    android:text="Цвет не выбран"
+                    android:textColor="#F0F4FA"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp" />
 
-                    <View
-                        android:layout_width="76dp"
-                        android:layout_height="68dp"
-                        android:background="@drawable/bg_color_sample" />
+                <Button
+                    android:id="@+id/homeSelectColorButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="14dp"
+                    android:text="ВЫБРАТЬ ЦВЕТ ПЛЁНКИ"
+                    android:textColor="#101820"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"
+                    android:background="@drawable/bg_button_primary"
+                    android:backgroundTint="@null"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:stateListAnimator="@null" />
 
-                    <TextView
-                        android:id="@+id/homeColorInfo"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="16dp"
-                        android:text="Цвет плёнки не выбран"
-                        android:textColor="#F2F6FC"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
             </LinearLayout>
 
             <Button
                 android:id="@+id/startCameraButton"
                 android:layout_width="match_parent"
-                android:layout_height="66dp"
-                android:layout_marginTop="18dp"
-                android:background="@drawable/bg_button_primary"
-                android:text="◉     НАЧАТЬ ПРОСМОТР"
-                android:textColor="#07111D"
-                android:textSize="18sp"
+                android:layout_height="58dp"
+                android:text="ОТКРЫТЬ КАМЕРУ"
+                android:textColor="#101820"
+                android:textSize="14sp"
                 android:textStyle="bold"
+                android:letterSpacing="0.12"
+                android:background="@drawable/bg_button_primary"
+                android:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
                 android:stateListAnimator="@null" />
 
-            <LinearLayout
+            <Button
+                android:id="@+id/myProjectsButton"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal"
-                android:layout_marginTop="12dp">
+                android:layout_height="52dp"
+                android:layout_marginTop="12dp"
+                android:text="МОИ ПРОЕКТЫ"
+                android:textColor="#DCE8F7"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:background="@drawable/bg_button_secondary"
+                android:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:stateListAnimator="@null" />
 
-                <Button
-                    android:id="@+id/homeSelectColorButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    android:background="@drawable/bg_button_secondary"
-                    android:text="◈  ВЫБРАТЬ ЦВЕТ"
-                    android:textColor="#07111D"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:stateListAnimator="@null" />
-
-                <Button
-                    android:id="@+id/myProjectsButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    android:background="@drawable/bg_button_secondary"
-                    android:text="▰  МОИ ПРОЕКТЫ"
-                    android:textColor="#07111D"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:stateListAnimator="@null" />
-
-            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AUTOMOTIVE COLOR VISUALIZATION"
+                android:textColor="#53677E"
+                android:textSize="9sp"
+                android:letterSpacing="0.16"
+                android:gravity="center"
+                android:layout_marginTop="25dp" />
 
         </LinearLayout>
     </ScrollView>
@@ -194,7 +174,7 @@
         android:id="@+id/cameraScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#05090F"
+        android:background="#080B10"
         android:visibility="gone">
 
         <androidx.camera.view.PreviewView
@@ -207,34 +187,40 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:orientation="vertical"
-            android:padding="16dp"
-            android:background="#D908101A">
+            android:padding="18dp"
+            android:background="#E6101722">
 
             <TextView
                 android:id="@+id/statusText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Камера готова"
+                android:textColor="#EAF3FF"
+                android:textSize="13sp"
                 android:gravity="center"
-                android:text="Выберите цвет плёнки"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
-                android:padding="8dp" />
+                android:layout_marginBottom="12dp" />
 
             <Button
                 android:id="@+id/selectColorButton"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="48dp"
+                android:text="ВЫБРАТЬ ОБРАЗЕЦ ЦВЕТА"
+                android:textColor="#101820"
+                android:textSize="12sp"
+                android:textStyle="bold"
                 android:background="@drawable/bg_button_primary"
-                android:text="ВЫБРАТЬ ЦВЕТ"
-                android:textColor="#07111D"
-                android:textSize="14sp"
+                android:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
                 android:stateListAnimator="@null" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
 
                 <Button
                     android:id="@+id/bodyModeButton"
@@ -242,15 +228,15 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginEnd="5dp"
-                    android:minWidth="0dp"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:background="@drawable/bg_button_secondary"
                     android:text="ВЕСЬ КУЗОВ"
-                    android:textColor="#07111D"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:singleLine="true"
+                    android:textColor="#DCE8F7"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_button_secondary"
+                    android:backgroundTint="@null"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
                     android:stateListAnimator="@null" />
 
                 <Button
@@ -259,15 +245,15 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginStart="5dp"
-                    android:minWidth="0dp"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:background="@drawable/bg_button_secondary"
                     android:text="ПО ДЕТАЛЯМ"
-                    android:textColor="#07111D"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:singleLine="true"
+                    android:textColor="#DCE8F7"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_button_secondary"
+                    android:backgroundTint="@null"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
                     android:stateListAnimator="@null" />
 
             </LinearLayout>
@@ -275,15 +261,21 @@
             <Button
                 android:id="@+id/backToHomeButton"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_button_glow"
-                android:text="НА ГЛАВНУЮ"
-                android:textColor="#07111D"
-                android:textSize="14sp"
+                android:layout_height="46dp"
+                android:layout_marginTop="10dp"
+                android:text="НА ГЛАВНЫЙ ЭКРАН"
+                android:textColor="#AFC4DD"
+                android:textSize="11sp"
+                android:background="@drawable/bg_button_secondary"
+                android:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
                 android:stateListAnimator="@null" />
 
         </LinearLayout>
-    </FrameLayout>
-</FrameLayout>
 
+    </FrameLayout>
+
+</FrameLayout>
