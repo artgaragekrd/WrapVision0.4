@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var homeScreen: View
     private lateinit var cameraScreen: View
     private lateinit var homeSelectColorButton: Button
-    private lateinit var startCameraButton: Button
 
     private var selectedColor: Int? = null
     private var cameraProvider: ProcessCameraProvider? = null
@@ -61,34 +60,32 @@ class MainActivity : AppCompatActivity() {
         window.statusBarColor = Color.rgb(8, 11, 16)
         window.navigationBarColor = Color.rgb(8, 11, 16)
 
-        WindowCompat.getInsetsController(
-            window,
-            window.decorView
-        ).apply {
-            isAppearanceLightStatusBars = false
-            isAppearanceLightNavigationBars = false
-        }
+        WindowCompat.getInsetsController(window, window.decorView)
+            .isAppearanceLightStatusBars = false
+
+        WindowCompat.getInsetsController(window, window.decorView)
+            .isAppearanceLightNavigationBars = false
 
         setContentView(R.layout.activity_main)
 
-        val root = findViewById<View>(android.R.id.content)
+        val rootView = findViewById<View>(android.R.id.content)
 
-        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
-            val bars = insets.getInsets(
+        ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
+            val systemBars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
             )
 
             view.setPadding(
-                bars.left,
-                bars.top,
-                bars.right,
-                bars.bottom
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
             )
 
             insets
         }
 
-        ViewCompat.requestApplyInsets(root)
+        ViewCompat.requestApplyInsets(rootView)
 
         homeScreen = findViewById(R.id.homeScreen)
         cameraScreen = findViewById(R.id.cameraScreen)
@@ -98,11 +95,8 @@ class MainActivity : AppCompatActivity() {
         homeSelectColorButton =
             findViewById(R.id.homeSelectColorButton)
 
-        startCameraButton =
-            findViewById(R.id.startCameraButton)
-
-        // Принудительно восстанавливаем надпись кнопки
-        startCameraButton.apply {
+        // Главная кнопка
+        findViewById<Button>(R.id.startCameraButton).apply {
             text = "НАЧАТЬ ПРОСМОТР"
             setTextColor(Color.rgb(16, 24, 32))
             textSize = 17f
@@ -111,36 +105,42 @@ class MainActivity : AppCompatActivity() {
             visibility = View.VISIBLE
             backgroundTintList = null
             setBackgroundResource(R.drawable.bg_button_primary)
+
+            setOnClickListener {
+                openCameraScreen()
+            }
         }
 
-        startCameraButton.setOnClickListener {
-            openCameraScreen()
-        }
-
+        // Выбор цвета с главного экрана
         homeSelectColorButton.setOnClickListener {
             colorPicker.launch("image/*")
         }
 
+        // Выбор плёнки в режиме камеры
         findViewById<Button>(R.id.selectColorButton)
             .setOnClickListener {
                 colorPicker.launch("image/*")
             }
 
+        // Режим всего кузова
         findViewById<Button>(R.id.bodyModeButton)
             .setOnClickListener {
                 statusText.text = "Режим: Весь кузов"
             }
 
+        // Режим отдельных деталей
         findViewById<Button>(R.id.partsModeButton)
             .setOnClickListener {
                 statusText.text = "Режим: Отдельные детали"
             }
 
+        // Возврат на главный экран
         findViewById<Button>(R.id.backToHomeButton)
             .setOnClickListener {
                 showHomeScreen()
             }
 
+        // Мои проекты
         findViewById<Button>(R.id.myProjectsButton)
             .setOnClickListener {
                 Toast.makeText(
@@ -149,6 +149,26 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
+        // Единый серебристый стиль всех кнопок
+        val silverButtons = intArrayOf(
+            R.id.startCameraButton,
+            R.id.homeSelectColorButton,
+            R.id.myProjectsButton,
+            R.id.selectColorButton,
+            R.id.bodyModeButton,
+            R.id.partsModeButton,
+            R.id.backToHomeButton
+        )
+
+        silverButtons.forEach { buttonId ->
+            findViewById<Button>(buttonId)?.apply {
+                backgroundTintList = null
+                setBackgroundResource(R.drawable.bg_button_primary)
+                setTextColor(Color.rgb(16, 24, 32))
+                isAllCaps = false
+            }
+        }
 
         showHomeScreen()
     }
@@ -227,6 +247,7 @@ class MainActivity : AppCompatActivity() {
                 "Ошибка обработки фотографии",
                 Toast.LENGTH_SHORT
             ).show()
+
         } finally {
             smallBitmap?.recycle()
             bitmap?.recycle()
