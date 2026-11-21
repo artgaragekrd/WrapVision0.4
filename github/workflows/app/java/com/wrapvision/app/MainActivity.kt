@@ -3,6 +3,7 @@ package com.wrapvision.app
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -22,8 +23,21 @@ class MainActivity : AppCompatActivity() {
     private val cameraPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) startCamera()
-        else statusText.text = "Необходимо разрешить доступ к камере"
+        if (granted) {
+            startCamera()
+        } else {
+            statusText.text = "Необходимо разрешить доступ к камере"
+        }
+    }
+
+    private val colorPicker = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            readSampleColor(uri)
+        } else {
+            statusText.text = "Выбор фотографии отменён"
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,11 +56,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.selectColorButton).setOnClickListener {
-            statusText.text = "Выбор цвета будет добавлен"
+            colorPicker.launch("image/*")
         }
 
         if (ContextCompat.checkSelfPermission(
-                this, Manifest.permission.CAMERA
+                this,
+                Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             startCamera()
@@ -55,21 +70,87 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun startCamera() {
-        val future = ProcessCameraProvider.getInstance(this)
+    private fun readSampleColor(uri: android.net.Uri) {
+        try {
+            val bounds = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
 
-        future.addListener({
-            val provider = future.get()
+            contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, bounds)
+            }
+
+            val options = BitmapFactory.Options().apply {
+                inSampleSize = calculateSampleSize(
+                    bounds.outWidth,
+                    bounds.outHeight
+                )
+            }
+
+            val bitmap = contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, options)
+            }
+
+            if (bitmap == null) {
+                statusText.text = "Не удалось прочитать фотографию"
+                return
+            }
+
+            val pixel = android.graphics.Bitmap.createScaledBitmap(
+                bitmap, 1, 1, true
+            )
+
+            val color = pixel.getPixel(0, 0)
+
+            val colorCode = String.format(
+                "#%06X",
+                0xFFFFFF and color
+            )
+
+            statusText.text = "Цвет образца: $colorCode"
+
+            bitmap.recycle()
+            pixel.recycle()
+
+        } catch (e: Exception) {
+            statusText.text = "Ошибка чтения фотографии"
+        }
+    }
+
+    private fun calculateSampleSize(
+        width: Int,
+        height: Int
+    ): Int {
+        var sampleSize = 1
+
+        while (width / sampleSize > 1024 ||
+            height / sampleSize > 1024
+        ) {
+            sampleSize *= 2
+        }
+
+        return sampleSize
+    }
+
+    private fun startCamera() {
+        val cameraProviderFuture =
+            ProcessCameraProvider.getInstance(this)
+
+        cameraProviderFuture.addListener({
+
+            val cameraProvider = cameraProviderFuture.get()
+
             val preview = Preview.Builder().build()
             preview.surfaceProvider = cameraPreview.surfaceProvider
 
-            provider.unbindAll()
-            provider.bindToLifecycle(
+            cameraProvider.unbindAll()
+
+            cameraProvider.bindToLifecycle(
                 this,
                 CameraSelector.DEFAULT_BACK_CAMERA,
                 preview
             )
+
         }, ContextCompat.getMainExecutor(this))
     }
 }
-
