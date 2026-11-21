@@ -9,8 +9,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -53,10 +55,9 @@ class MainActivity : AppCompatActivity() {
         cameraScreen = findViewById(R.id.cameraScreen)
         cameraPreview = findViewById(R.id.cameraPreview)
         statusText = findViewById(R.id.statusText)
+
         homeSelectColorButton =
             findViewById(R.id.homeSelectColorButton)
-
-        showHomeScreen()
 
         findViewById<Button>(R.id.startCameraButton)
             .setOnClickListener {
@@ -89,16 +90,19 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.myProjectsButton)
             .setOnClickListener {
-                android.widget.Toast.makeText(
+                Toast.makeText(
                     this,
                     "Раздел проектов добавим следующим этапом",
-                    android.widget.Toast.LENGTH_SHORT
+                    Toast.LENGTH_SHORT
                 ).show()
             }
+
+        showHomeScreen()
     }
 
     private fun showHomeScreen() {
         cameraProvider?.unbindAll()
+
         homeScreen.visibility = View.VISIBLE
         cameraScreen.visibility = View.GONE
     }
@@ -107,7 +111,8 @@ class MainActivity : AppCompatActivity() {
         homeScreen.visibility = View.GONE
         cameraScreen.visibility = View.VISIBLE
 
-        if (ContextCompat.checkSelfPermission(
+        if (
+            ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
@@ -120,6 +125,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun readSampleColor(uri: android.net.Uri) {
         var bitmap: Bitmap? = null
+        var smallBitmap: Bitmap? = null
 
         try {
             bitmap = contentResolver.openInputStream(uri)?.use {
@@ -127,11 +133,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (bitmap == null) {
-                statusText.text = "Не удалось открыть фотографию"
+                Toast.makeText(
+                    this,
+                    "Не удалось открыть фотографию",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return
             }
 
-            val smallBitmap = Bitmap.createScaledBitmap(
+            smallBitmap = Bitmap.createScaledBitmap(
                 bitmap,
                 1,
                 1,
@@ -146,15 +156,26 @@ class MainActivity : AppCompatActivity() {
                 0xFFFFFF and color
             )
 
-            statusText.text = "Выбран цвет плёнки: $colorCode"
             homeSelectColorButton.text =
                 "Цвет выбран: $colorCode"
 
-            smallBitmap.recycle()
+            statusText.text =
+                "Выбран цвет плёнки: $colorCode"
+
+            Toast.makeText(
+                this,
+                "Выбран цвет: $colorCode",
+                Toast.LENGTH_SHORT
+            ).show()
 
         } catch (e: Exception) {
-            statusText.text = "Ошибка обработки фотографии"
+            Toast.makeText(
+                this,
+                "Ошибка обработки фотографии",
+                Toast.LENGTH_SHORT
+            ).show()
         } finally {
+            smallBitmap?.recycle()
             bitmap?.recycle()
         }
     }
@@ -171,6 +192,7 @@ class MainActivity : AppCompatActivity() {
                     cameraProvider = provider
 
                     val preview = Preview.Builder().build()
+
                     preview.surfaceProvider =
                         cameraPreview.surfaceProvider
 
@@ -178,7 +200,7 @@ class MainActivity : AppCompatActivity() {
 
                     provider.bindToLifecycle(
                         this,
-                        androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA,
+                        CameraSelector.DEFAULT_BACK_CAMERA,
                         preview
                     )
 
