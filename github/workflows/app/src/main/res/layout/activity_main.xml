@@ -41,13 +41,16 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="270dp"
-                android:layout_marginTop="25dp">
+                android:layout_marginTop="25dp"
+                android:background="#080A0D">
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/mustang_home"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:background="#080A0D"
                     android:contentDescription="Ford Mustang Eleanor"/>
 
             </FrameLayout>
@@ -88,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:gravity="center"
-                android:text="W R A P V I S I O N\nP R E M I U M  S T U D I O"
+                android:text="W R A P V I S I O N&#10;P R E M I U M  S T U D I O"
                 android:textColor="#AEB5BE"
                 android:textSize="12sp"/>
 
