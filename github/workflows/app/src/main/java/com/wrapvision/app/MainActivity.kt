@@ -3,6 +3,8 @@ package com.wrapvision.app
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -19,6 +21,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cameraPreview: PreviewView
     private lateinit var statusText: TextView
 
+    private var selectedColor: Int? = null
+
+    // Запрос разрешения камеры
     private val cameraPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -29,6 +34,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Открытие галереи
+    private val colorPicker = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            readSampleColor(uri)
+        } else {
+            statusText.text = "Фотография не выбрана"
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -36,18 +52,26 @@ class MainActivity : AppCompatActivity() {
         cameraPreview = findViewById(R.id.cameraPreview)
         statusText = findViewById(R.id.statusText)
 
-        findViewById<Button>(R.id.bodyModeButton).setOnClickListener {
-            statusText.text = "Режим: Весь кузов"
-        }
+        // Режим всего кузова
+        findViewById<Button>(R.id.bodyModeButton)
+            .setOnClickListener {
+                statusText.text = "Режим: Весь кузов"
+            }
 
-        findViewById<Button>(R.id.partsModeButton).setOnClickListener {
-            statusText.text = "Режим: Отдельные детали"
-        }
+        // Режим отдельных деталей
+        findViewById<Button>(R.id.partsModeButton)
+            .setOnClickListener {
+                statusText.text = "Режим: Отдельные детали"
+            }
 
-        findViewById<Button>(R.id.selectColorButton).setOnClickListener {
-            statusText.text = "Выбор цвета будет добавлен"
-        }
+        // Выбор фотографии плёнки
+        findViewById<Button>(R.id.selectColorButton)
+            .setOnClickListener {
+                statusText.text = "Открываем галерею..."
+                colorPicker.launch("image/*")
+            }
 
+        // Проверка разрешения камеры
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
@@ -59,20 +83,77 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun startCamera() {
-        val future = ProcessCameraProvider.getInstance(this)
+    // Чтение фотографии и определение примерного цвета
+    private fun readSampleColor(uri: android.net.Uri) {
+        var bitmap: Bitmap? = null
 
-        future.addListener({
-            val provider = future.get()
-            val preview = Preview.Builder().build()
-            preview.surfaceProvider = cameraPreview.surfaceProvider
+        try {
+            bitmap = contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it)
+            }
 
-            provider.unbindAll()
-            provider.bindToLifecycle(
-                this,
-                CameraSelector.DEFAULT_BACK_CAMERA,
-                preview
+            if (bitmap == null) {
+                statusText.text = "Не удалось открыть фотографию"
+                return
+            }
+
+            val smallBitmap = Bitmap.createScaledBitmap(
+                bitmap,
+                1,
+                1,
+                true
             )
-        }, ContextCompat.getMainExecutor(this))
+
+            val color = smallBitmap.getPixel(0, 0)
+            selectedColor = color
+
+            val colorCode = String.format(
+                "#%06X",
+                0xFFFFFF and color
+            )
+
+            statusText.text = "Выбран цвет плёнки: $colorCode"
+
+            smallBitmap.recycle()
+
+        } catch (e: Exception) {
+            statusText.text = "Ошибка обработки фотографии"
+        } finally {
+            bitmap?.recycle()
+        }
+    }
+
+    // Запуск камеры
+    private fun startCamera() {
+        try {
+            val cameraProviderFuture =
+                ProcessCameraProvider.getInstance(this)
+
+            cameraProviderFuture.addListener({
+
+                try {
+                    val cameraProvider = cameraProviderFuture.get()
+
+                    val preview = Preview.Builder().build()
+                    preview.surfaceProvider =
+                        cameraPreview.surfaceProvider
+
+                    cameraProvider.unbindAll()
+
+                    cameraProvider.bindToLifecycle(
+                        this,
+                        CameraSelector.DEFAULT_BACK_CAMERA,
+                        preview
+                    )
+
+                } catch (e: Exception) {
+                    statusText.text = "Ошибка запуска камеры"
+                }
+
+            }, ContextCompat.getMainExecutor(this))
+
+        } catch (e: Exception) {
+            statusText.text = "Не удалось подключить камеру"
+        }
     }
 }
