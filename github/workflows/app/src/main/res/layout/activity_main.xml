@@ -9,8 +9,7 @@
         android:id="@+id/homeScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:clipToPadding="false">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,9 +33,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="P R E M I U M   A U T O M O T I V E   S T U D I O"
+                android:text="PREMIUM AUTOMOTIVE STUDIO"
                 android:textColor="#42BFFF"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:gravity="center"
                 android:layout_marginTop="8dp"/>
 
@@ -81,7 +80,6 @@
                 android:textColor="#9BAABC"
                 android:textSize="11sp"
                 android:gravity="center"
-                android:letterSpacing="0.08"
                 android:layout_marginTop="17dp"/>
 
             <Button
@@ -90,10 +88,12 @@
                 android:layout_height="66dp"
                 android:layout_marginTop="25dp"
                 android:text="НАЧАТЬ ПРОСМОТР"
+                android:textAllCaps="false"
                 android:textColor="#101820"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.06"
+                android:gravity="center"
+                android:visibility="visible"
                 android:background="@drawable/bg_button_primary"
                 android:backgroundTint="@null"
                 android:elevation="5dp"/>
@@ -104,9 +104,11 @@
                 android:layout_height="66dp"
                 android:layout_marginTop="13dp"
                 android:text="ВЫБРАТЬ ЦВЕТ ПЛЁНКИ"
+                android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
+                android:gravity="center"
                 android:background="@drawable/bg_button_secondary"
                 android:backgroundTint="@null"/>
 
@@ -116,9 +118,11 @@
                 android:layout_height="66dp"
                 android:layout_marginTop="13dp"
                 android:text="МОИ ПРОЕКТЫ"
+                android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
+                android:gravity="center"
                 android:background="@drawable/bg_button_glow"
                 android:backgroundTint="@null"/>
 
@@ -129,7 +133,6 @@
                 android:textColor="#657386"
                 android:textSize="9sp"
                 android:gravity="center"
-                android:letterSpacing="0.12"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"/>
 
@@ -166,8 +169,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Выбрать цвет плёнки"
+            android:text="ВЫБРАТЬ ЦВЕТ ПЛЁНКИ"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
+            android:textSize="15sp"
             android:background="@drawable/bg_button_secondary"
             android:backgroundTint="@null"/>
 
@@ -176,8 +181,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
-            android:text="Весь кузов"
+            android:text="ВЕСЬ КУЗОВ"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
+            android:textSize="15sp"
             android:background="@drawable/bg_button_glow"
             android:backgroundTint="@null"/>
 
@@ -186,8 +193,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
-            android:text="Отдельные детали"
+            android:text="ОТДЕЛЬНЫЕ ДЕТАЛИ"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
+            android:textSize="15sp"
             android:background="@drawable/bg_button_secondary"
             android:backgroundTint="@null"/>
 
@@ -196,8 +205,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="На главный экран"
+            android:text="НА ГЛАВНЫЙ ЭКРАН"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
+            android:textSize="15sp"
             android:background="@drawable/bg_button_secondary"
             android:backgroundTint="@null"/>
 
