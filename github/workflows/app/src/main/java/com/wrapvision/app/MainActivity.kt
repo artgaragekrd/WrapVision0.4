@@ -5,7 +5,9 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -17,6 +19,9 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var homeScreen: View
     private lateinit var cameraScreen: View
     private lateinit var homeSelectColorButton: Button
+    private lateinit var startCameraButton: Button
 
     private var selectedColor: Int? = null
     private var cameraProvider: ProcessCameraProvider? = null
@@ -49,7 +55,40 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        window.statusBarColor = Color.rgb(8, 11, 16)
+        window.navigationBarColor = Color.rgb(8, 11, 16)
+
+        WindowCompat.getInsetsController(
+            window,
+            window.decorView
+        ).apply {
+            isAppearanceLightStatusBars = false
+            isAppearanceLightNavigationBars = false
+        }
+
         setContentView(R.layout.activity_main)
+
+        val root = findViewById<View>(android.R.id.content)
+
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+            )
+
+            view.setPadding(
+                bars.left,
+                bars.top,
+                bars.right,
+                bars.bottom
+            )
+
+            insets
+        }
+
+        ViewCompat.requestApplyInsets(root)
 
         homeScreen = findViewById(R.id.homeScreen)
         cameraScreen = findViewById(R.id.cameraScreen)
@@ -59,10 +98,24 @@ class MainActivity : AppCompatActivity() {
         homeSelectColorButton =
             findViewById(R.id.homeSelectColorButton)
 
-        findViewById<Button>(R.id.startCameraButton)
-            .setOnClickListener {
-                openCameraScreen()
-            }
+        startCameraButton =
+            findViewById(R.id.startCameraButton)
+
+        // Принудительно восстанавливаем надпись кнопки
+        startCameraButton.apply {
+            text = "НАЧАТЬ ПРОСМОТР"
+            setTextColor(Color.rgb(16, 24, 32))
+            textSize = 17f
+            isAllCaps = false
+            gravity = Gravity.CENTER
+            visibility = View.VISIBLE
+            backgroundTintList = null
+            setBackgroundResource(R.drawable.bg_button_primary)
+        }
+
+        startCameraButton.setOnClickListener {
+            openCameraScreen()
+        }
 
         homeSelectColorButton.setOnClickListener {
             colorPicker.launch("image/*")
