@@ -3,10 +3,14 @@ package com.wrapvision.app
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -17,8 +21,15 @@ import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var homeScreen: View
+    private lateinit var cameraScreen: View
     private lateinit var cameraPreview: PreviewView
     private lateinit var statusText: TextView
+    private lateinit var homeColorInfo: TextView
+
+    private var cameraProvider: ProcessCameraProvider? = null
+
+    private var selectedMode = "Весь кузов"
 
     private val cameraPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -44,20 +55,66 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        homeScreen = findViewById(R.id.homeScreen)
+        cameraScreen = findViewById(R.id.cameraScreen)
         cameraPreview = findViewById(R.id.cameraPreview)
         statusText = findViewById(R.id.statusText)
+        homeColorInfo = findViewById(R.id.homeColorInfo)
 
-        findViewById<Button>(R.id.bodyModeButton).setOnClickListener {
-            statusText.text = "Режим: Весь кузов"
-        }
+        findViewById<Button>(R.id.startCameraButton)
+            .setOnClickListener {
+                openCameraScreen()
+            }
 
-        findViewById<Button>(R.id.partsModeButton).setOnClickListener {
-            statusText.text = "Режим: Отдельные детали"
-        }
+        findViewById<Button>(R.id.homeSelectColorButton)
+            .setOnClickListener {
+                colorPicker.launch("image/*")
+            }
 
-        findViewById<Button>(R.id.selectColorButton).setOnClickListener {
-            colorPicker.launch("image/*")
-        }
+        findViewById<Button>(R.id.myProjectsButton)
+            .setOnClickListener {
+                Toast.makeText(
+                    this,
+                    "Раздел проектов готовится",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        findViewById<Button>(R.id.bodyModeButton)
+            .setOnClickListener {
+                selectedMode = "Весь кузов"
+                statusText.text = "Режим: $selectedMode"
+            }
+
+        findViewById<Button>(R.id.partsModeButton)
+            .setOnClickListener {
+                selectedMode = "Отдельные детали"
+                statusText.text = "Режим: $selectedMode"
+            }
+
+        findViewById<Button>(R.id.selectColorButton)
+            .setOnClickListener {
+                colorPicker.launch("image/*")
+            }
+
+        findViewById<Button>(R.id.backToHomeButton)
+            .setOnClickListener {
+                showHomeScreen()
+            }
+
+        showHomeScreen()
+    }
+
+    private fun showHomeScreen() {
+        homeScreen.visibility = View.VISIBLE
+        cameraScreen.visibility = View.GONE
+
+        cameraProvider?.unbindAll()
+    }
+
+    private fun openCameraScreen() {
+        homeScreen.visibility = View.GONE
+        cameraScreen.visibility = View.VISIBLE
 
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -80,6 +137,11 @@ class MainActivity : AppCompatActivity() {
                 BitmapFactory.decodeStream(it, null, bounds)
             }
 
+            if (bounds.outWidth <= 0 || bounds.outHeight <= 0) {
+                statusText.text = "Не удалось прочитать изображение"
+                return
+            }
+
             val options = BitmapFactory.Options().apply {
                 inSampleSize = calculateSampleSize(
                     bounds.outWidth,
@@ -96,7 +158,7 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
-            val pixel = android.graphics.Bitmap.createScaledBitmap(
+            val pixel = Bitmap.createScaledBitmap(
                 bitmap, 1, 1, true
             )
 
@@ -107,10 +169,16 @@ class MainActivity : AppCompatActivity() {
                 0xFFFFFF and color
             )
 
+            homeColorInfo.text = "Выбран цвет плёнки: $colorCode"
             statusText.text = "Цвет образца: $colorCode"
 
+            homeColorInfo.setTextColor(Color.WHITE)
+
+            if (pixel !== bitmap) {
+                pixel.recycle()
+            }
+
             bitmap.recycle()
-            pixel.recycle()
 
         } catch (e: Exception) {
             statusText.text = "Ошибка чтения фотографии"
@@ -138,19 +206,35 @@ class MainActivity : AppCompatActivity() {
 
         cameraProviderFuture.addListener({
 
-            val cameraProvider = cameraProviderFuture.get()
+            try {
+                val provider = cameraProviderFuture.get()
+                cameraProvider = provider
 
-            val preview = Preview.Builder().build()
-            preview.surfaceProvider = cameraPreview.surfaceProvider
+                val preview = Preview.Builder().build()
+                preview.surfaceProvider =
+                    cameraPreview.surfaceProvider
 
-            cameraProvider.unbindAll()
+                provider.unbindAll()
 
-            cameraProvider.bindToLifecycle(
-                this,
-                CameraSelector.DEFAULT_BACK_CAMERA,
-                preview
-            )
+                provider.bindToLifecycle(
+                    this,
+                    CameraSelector.DEFAULT_BACK_CAMERA,
+                    preview
+                )
+
+            } catch (e: Exception) {
+                statusText.text = "Не удалось запустить камеру"
+            }
 
         }, ContextCompat.getMainExecutor(this))
+    }
+
+    @Deprecated("Deprecated in Android")
+    override fun onBackPressed() {
+        if (cameraScreen.visibility == View.VISIBLE) {
+            showHomeScreen()
+        } else {
+            super.onBackPressed()
+        }
     }
 }
