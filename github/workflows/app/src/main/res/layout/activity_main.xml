@@ -22,9 +22,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="25dp"
                 android:text="WRAPVISION"
-                android:textColor="#E9EDF2"
+                android:textColor="#FFFFFF"
                 android:textSize="34sp"
                 android:textStyle="bold"
                 android:gravity="center"/>
@@ -40,48 +40,24 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_marginTop="28dp"
-                android:background="#20252B">
+                android:layout_height="270dp"
+                android:layout_marginTop="25dp">
 
-                <LinearLayout
+                <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:src="@drawable/mustang_home"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Ford Mustang Eleanor"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="FORD MUSTANG"
-                        android:textColor="#FFFFFF"
-                        android:textSize="23sp"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="PREMIUM CAR STUDIO"
-                        android:textColor="#AEB5BE"
-                        android:textSize="12sp"
-                        android:layout_marginTop="8dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="◆"
-                        android:textColor="#DDE2E8"
-                        android:textSize="65sp"
-                        android:layout_marginTop="12dp"/>
-                </LinearLayout>
             </FrameLayout>
 
             <Button
                 android:id="@+id/startCameraButton"
                 android:layout_width="match_parent"
                 android:layout_height="76dp"
-                android:layout_marginTop="26dp"
-                android:text="Начать просмотр"
+                android:layout_marginTop="24dp"
+                android:text="НАЧАТЬ ПРОСМОТР"
                 android:textSize="19sp"
                 android:textStyle="bold"
                 android:textColor="#101318"
@@ -92,8 +68,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="76dp"
                 android:layout_marginTop="14dp"
-                android:text="Выбрать цвет плёнки"
-                android:textSize="18sp"
+                android:text="ВЫБРАТЬ ЦВЕТ ПЛЁНКИ"
+                android:textSize="17sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#20242A"/>
 
@@ -102,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="76dp"
                 android:layout_marginTop="14dp"
-                android:text="Мои проекты"
+                android:text="МОИ ПРОЕКТЫ"
                 android:textSize="18sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#20242A"/>
@@ -110,7 +86,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="25dp"
                 android:gravity="center"
                 android:text="W R A P V I S I O N\nP R E M I U M  S T U D I O"
                 android:textColor="#AEB5BE"
