@@ -3,97 +3,135 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#080A0D">
+    android:background="#080B10">
 
     <ScrollView
         android:id="@+id/homeScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:padding="20dp"
             android:gravity="center_horizontal"
-            android:padding="22dp"
-            android:background="#080A0D">
+            android:background="#080B10">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
                 android:text="WRAPVISION"
-                android:textColor="#FFFFFF"
-                android:textSize="34sp"
+                android:textColor="#F3F6FA"
+                android:textSize="30sp"
                 android:textStyle="bold"
-                android:gravity="center"/>
+                android:letterSpacing="0.16"
+                android:gravity="center"
+                android:layout_marginTop="20dp"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CAR COLOR STUDIO"
-                android:textColor="#C2C7CE"
-                android:textSize="15sp"
+                android:text="P R E M I U M   A U T O M O T I V E   S T U D I O"
+                android:textColor="#42BFFF"
+                android:textSize="10sp"
                 android:gravity="center"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="8dp"/>
+
+            <View
+                android:layout_width="65dp"
+                android:layout_height="2dp"
+                android:background="#28B8FF"
+                android:layout_marginTop="18dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ВАШ АВТОМОБИЛЬ.\nВАШ СТИЛЬ."
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="25dp"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="270dp"
-                android:layout_marginTop="25dp"
-                android:background="#080A0D">
+                android:layout_height="260dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/bg_premium_panel"
+                android:padding="5dp">
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/mustang_home"
                     android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:background="#080A0D"
+                    android:background="#080B10"
                     android:contentDescription="Ford Mustang Eleanor"/>
 
             </FrameLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ПРОФЕССИОНАЛЬНАЯ ВИЗУАЛИЗАЦИЯ ОКЛЕЙКИ"
+                android:textColor="#9BAABC"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:letterSpacing="0.08"
+                android:layout_marginTop="17dp"/>
+
             <Button
                 android:id="@+id/startCameraButton"
                 android:layout_width="match_parent"
-                android:layout_height="76dp"
-                android:layout_marginTop="24dp"
+                android:layout_height="66dp"
+                android:layout_marginTop="25dp"
                 android:text="НАЧАТЬ ПРОСМОТР"
-                android:textSize="19sp"
+                android:textColor="#101820"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="#101318"
-                android:backgroundTint="#DCE1E8"/>
+                android:letterSpacing="0.06"
+                android:background="@drawable/bg_button_primary"
+                android:backgroundTint="@null"
+                android:elevation="5dp"/>
 
             <Button
                 android:id="@+id/homeSelectColorButton"
                 android:layout_width="match_parent"
-                android:layout_height="76dp"
-                android:layout_marginTop="14dp"
+                android:layout_height="66dp"
+                android:layout_marginTop="13dp"
                 android:text="ВЫБРАТЬ ЦВЕТ ПЛЁНКИ"
-                android:textSize="17sp"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#20242A"/>
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_button_secondary"
+                android:backgroundTint="@null"/>
 
             <Button
                 android:id="@+id/myProjectsButton"
                 android:layout_width="match_parent"
-                android:layout_height="76dp"
-                android:layout_marginTop="14dp"
+                android:layout_height="66dp"
+                android:layout_marginTop="13dp"
                 android:text="МОИ ПРОЕКТЫ"
-                android:textSize="18sp"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#20242A"/>
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_button_glow"
+                android:backgroundTint="@null"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:text="DESIGNED FOR AUTOMOTIVE PROFESSIONALS"
+                android:textColor="#657386"
+                android:textSize="9sp"
                 android:gravity="center"
-                android:text="W R A P V I S I O N&#10;P R E M I U M  S T U D I O"
-                android:textColor="#AEB5BE"
-                android:textSize="12sp"/>
+                android:letterSpacing="0.12"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"/>
 
         </LinearLayout>
     </ScrollView>
@@ -103,17 +141,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#080A0D"
+        android:background="#080B10"
         android:visibility="gone">
 
         <TextView
             android:id="@+id/statusText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp"
+            android:padding="14dp"
             android:text="Камера готова"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:background="#151C26"/>
 
         <androidx.camera.view.PreviewView
             android:id="@+id/cameraPreview"
@@ -126,25 +165,41 @@
             android:id="@+id/selectColorButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Выбрать цвет плёнки"/>
+            android:layout_margin="8dp"
+            android:text="Выбрать цвет плёнки"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_button_secondary"
+            android:backgroundTint="@null"/>
 
         <Button
             android:id="@+id/bodyModeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Весь кузов"/>
+            android:layout_margin="6dp"
+            android:text="Весь кузов"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_button_glow"
+            android:backgroundTint="@null"/>
 
         <Button
             android:id="@+id/partsModeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Отдельные детали"/>
+            android:layout_margin="6dp"
+            android:text="Отдельные детали"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_button_secondary"
+            android:backgroundTint="@null"/>
 
         <Button
             android:id="@+id/backToHomeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="На главный экран"/>
+            android:layout_margin="8dp"
+            android:text="На главный экран"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_button_secondary"
+            android:backgroundTint="@null"/>
 
     </LinearLayout>
 
