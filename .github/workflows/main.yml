@@ -35,7 +35,7 @@ jobs:
 
       - name: Build WrapVision APK
         working-directory: github/workflows
-        run: gradle assembleDebug --stacktrace
+        run: gradle :app:assembleDebug --stacktrace
 
       - name: Upload APK
         if: success()
@@ -43,4 +43,3 @@ jobs:
         with:
           name: WrapVision-APK
           path: github/workflows/app/build/outputs/apk/debug/app-debug.apk
-
