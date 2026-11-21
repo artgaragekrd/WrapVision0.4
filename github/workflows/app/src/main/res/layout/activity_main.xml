@@ -23,6 +23,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="42dp">
+
                 <TextView
                     android:id="@+id/brandTitle"
                     android:layout_width="wrap_content"
@@ -37,6 +38,7 @@
                     android:shadowDx="0"
                     android:shadowDy="0"
                     android:shadowRadius="12" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -45,6 +47,7 @@
                     android:text="⚙"
                     android:textColor="#CDEBFF"
                     android:textSize="25sp" />
+
             </RelativeLayout>
 
             <TextView
@@ -67,6 +70,7 @@
                 android:textSize="21sp"
                 android:textStyle="bold"
                 android:paddingTop="2dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -82,6 +86,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_car_frame"
                 android:padding="2dp">
+
                 <ImageView
                     android:id="@+id/homeCarImage"
                     android:layout_width="match_parent"
@@ -90,6 +95,7 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/mustang_home"
                     android:contentDescription="Автомобиль Mustang" />
+
             </FrameLayout>
 
             <LinearLayout
@@ -99,6 +105,7 @@
                 android:orientation="vertical"
                 android:padding="16dp"
                 android:background="@drawable/bg_premium_panel">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -107,16 +114,19 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.04" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:paddingTop="12dp">
+
                     <View
                         android:layout_width="76dp"
                         android:layout_height="68dp"
                         android:background="@drawable/bg_color_sample" />
+
                     <TextView
                         android:id="@+id/homeColorInfo"
                         android:layout_width="0dp"
@@ -127,6 +137,7 @@
                         android:textColor="#F2F6FC"
                         android:textSize="15sp"
                         android:textStyle="bold" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -147,6 +158,7 @@
                 android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:layout_marginTop="12dp">
+
                 <Button
                     android:id="@+id/homeSelectColorButton"
                     android:layout_width="0dp"
@@ -159,6 +171,7 @@
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:stateListAnimator="@null" />
+
                 <Button
                     android:id="@+id/myProjectsButton"
                     android:layout_width="0dp"
@@ -171,20 +184,9 @@
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:stateListAnimator="@null" />
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:layout_marginTop="18dp"
-                android:background="@drawable/bg_bottom_navigation"
-                android:gravity="center"
-                android:orientation="horizontal">
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="⌂\nГлавная" android:textColor="#25C7FF" android:textStyle="bold" android:textSize="12sp" />
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="◉\nКамера" android:textColor="#B8C5D4" android:textSize="12sp" />
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="●\nПлёнки" android:textColor="#B8C5D4" android:textSize="12sp" />
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="▰\nПроекты" android:textColor="#B8C5D4" android:textSize="12sp" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
@@ -194,10 +196,12 @@
         android:layout_height="match_parent"
         android:background="#05090F"
         android:visibility="gone">
+
         <androidx.camera.view.PreviewView
             android:id="@+id/cameraPreview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -205,6 +209,7 @@
             android:orientation="vertical"
             android:padding="16dp"
             android:background="#D908101A">
+
             <TextView
                 android:id="@+id/statusText"
                 android:layout_width="match_parent"
@@ -214,43 +219,71 @@
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 android:padding="8dp" />
+
             <Button
                 android:id="@+id/selectColorButton"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:background="@drawable/bg_button_primary"
                 android:text="ВЫБРАТЬ ЦВЕТ"
-                android:textColor="#07111D" />
+                android:textColor="#07111D"
+                android:textSize="14sp"
+                android:stateListAnimator="@null" />
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/bodyModeButton"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginEnd="5dp"
+                    android:minWidth="0dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
                     android:background="@drawable/bg_button_secondary"
-                    android:text="Весь кузов"
-                    android:textColor="#07111D" />
+                    android:text="ВЕСЬ КУЗОВ"
+                    android:textColor="#07111D"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:singleLine="true"
+                    android:stateListAnimator="@null" />
+
                 <Button
                     android:id="@+id/partsModeButton"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginStart="5dp"
+                    android:minWidth="0dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
                     android:background="@drawable/bg_button_secondary"
-                    android:text="Отдельные детали"
-                    android:textColor="#07111D" />
+                    android:text="ПО ДЕТАЛЯМ"
+                    android:textColor="#07111D"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:singleLine="true"
+                    android:stateListAnimator="@null" />
+
             </LinearLayout>
+
             <Button
                 android:id="@+id/backToHomeButton"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_button_glow"
                 android:text="НА ГЛАВНУЮ"
-                android:textColor="#07111D" />
+                android:textColor="#07111D"
+                android:textSize="14sp"
+                android:stateListAnimator="@null" />
+
         </LinearLayout>
     </FrameLayout>
 </FrameLayout>
+
