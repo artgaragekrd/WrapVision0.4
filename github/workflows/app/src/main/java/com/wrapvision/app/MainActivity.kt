@@ -6,11 +6,11 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -20,10 +20,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var cameraPreview: PreviewView
     private lateinit var statusText: TextView
+    private lateinit var homeScreen: View
+    private lateinit var cameraScreen: View
+    private lateinit var homeSelectColorButton: Button
 
     private var selectedColor: Int? = null
+    private var cameraProvider: ProcessCameraProvider? = null
 
-    // Запрос разрешения камеры
     private val cameraPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -34,14 +37,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Открытие галереи
     private val colorPicker = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri ->
         if (uri != null) {
             readSampleColor(uri)
-        } else {
-            statusText.text = "Фотография не выбрана"
         }
     }
 
@@ -49,29 +49,64 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        homeScreen = findViewById(R.id.homeScreen)
+        cameraScreen = findViewById(R.id.cameraScreen)
         cameraPreview = findViewById(R.id.cameraPreview)
         statusText = findViewById(R.id.statusText)
+        homeSelectColorButton =
+            findViewById(R.id.homeSelectColorButton)
 
-        // Режим всего кузова
+        showHomeScreen()
+
+        findViewById<Button>(R.id.startCameraButton)
+            .setOnClickListener {
+                openCameraScreen()
+            }
+
+        homeSelectColorButton.setOnClickListener {
+            colorPicker.launch("image/*")
+        }
+
+        findViewById<Button>(R.id.selectColorButton)
+            .setOnClickListener {
+                colorPicker.launch("image/*")
+            }
+
         findViewById<Button>(R.id.bodyModeButton)
             .setOnClickListener {
                 statusText.text = "Режим: Весь кузов"
             }
 
-        // Режим отдельных деталей
         findViewById<Button>(R.id.partsModeButton)
             .setOnClickListener {
                 statusText.text = "Режим: Отдельные детали"
             }
 
-        // Выбор фотографии плёнки
-        findViewById<Button>(R.id.selectColorButton)
+        findViewById<Button>(R.id.backToHomeButton)
             .setOnClickListener {
-                statusText.text = "Открываем галерею..."
-                colorPicker.launch("image/*")
+                showHomeScreen()
             }
 
-        // Проверка разрешения камеры
+        findViewById<Button>(R.id.myProjectsButton)
+            .setOnClickListener {
+                android.widget.Toast.makeText(
+                    this,
+                    "Раздел проектов добавим следующим этапом",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+    private fun showHomeScreen() {
+        cameraProvider?.unbindAll()
+        homeScreen.visibility = View.VISIBLE
+        cameraScreen.visibility = View.GONE
+    }
+
+    private fun openCameraScreen() {
+        homeScreen.visibility = View.GONE
+        cameraScreen.visibility = View.VISIBLE
+
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
@@ -83,7 +118,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Чтение фотографии и определение примерного цвета
     private fun readSampleColor(uri: android.net.Uri) {
         var bitmap: Bitmap? = null
 
@@ -113,6 +147,8 @@ class MainActivity : AppCompatActivity() {
             )
 
             statusText.text = "Выбран цвет плёнки: $colorCode"
+            homeSelectColorButton.text =
+                "Цвет выбран: $colorCode"
 
             smallBitmap.recycle()
 
@@ -123,7 +159,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Запуск камеры
     private fun startCamera() {
         try {
             val cameraProviderFuture =
@@ -132,19 +167,22 @@ class MainActivity : AppCompatActivity() {
             cameraProviderFuture.addListener({
 
                 try {
-                    val cameraProvider = cameraProviderFuture.get()
+                    val provider = cameraProviderFuture.get()
+                    cameraProvider = provider
 
                     val preview = Preview.Builder().build()
                     preview.surfaceProvider =
                         cameraPreview.surfaceProvider
 
-                    cameraProvider.unbindAll()
+                    provider.unbindAll()
 
-                    cameraProvider.bindToLifecycle(
+                    provider.bindToLifecycle(
                         this,
-                        CameraSelector.DEFAULT_BACK_CAMERA,
+                        androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA,
                         preview
                     )
+
+                    statusText.text = "Камера готова"
 
                 } catch (e: Exception) {
                     statusText.text = "Ошибка запуска камеры"
@@ -154,6 +192,15 @@ class MainActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             statusText.text = "Не удалось подключить камеру"
+        }
+    }
+
+    @Deprecated("Deprecated in Android")
+    override fun onBackPressed() {
+        if (cameraScreen.visibility == View.VISIBLE) {
+            showHomeScreen()
+        } else {
+            super.onBackPressed()
         }
     }
 }
