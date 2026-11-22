@@ -1,38 +1,31 @@
+
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- ОСНОВНОЙ ЧЁРНЫЙ ФОН -->
     <item>
         <shape android:shape="rectangle">
-            <gradient
-                android:type="linear"
-                android:angle="270"
-                android:startColor="#020306"
-                android:centerColor="#080D15"
-                android:endColor="#020408" />
+            <solid android:color="#030509" />
         </shape>
     </item>
 
-    <!-- ВЕРХНЕЕ ГОЛУБОЕ СВЕЧЕНИЕ -->
     <item android:gravity="top">
         <shape android:shape="rectangle">
-            <size android:height="150dp" />
+            <size android:height="170dp" />
             <gradient
                 android:type="linear"
                 android:angle="270"
-                android:startColor="#172B43"
+                android:startColor="#172638"
                 android:endColor="#00000000" />
         </shape>
     </item>
 
-    <!-- НИЖНЕЕ НЕОНОВОЕ СВЕЧЕНИЕ -->
     <item android:gravity="bottom">
         <shape android:shape="rectangle">
-            <size android:height="190dp" />
+            <size android:height="170dp" />
             <gradient
                 android:type="linear"
                 android:angle="270"
                 android:startColor="#00000000"
-                android:endColor="#102D49" />
+                android:endColor="#102A43" />
         </shape>
     </item>
 
