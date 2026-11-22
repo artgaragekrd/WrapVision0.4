@@ -4,6 +4,7 @@ package com.wrapvision.app
 import android.Manifest
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -30,16 +31,18 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var colorSwatch: View
     private lateinit var colorCode: TextView
-
     private lateinit var bodyModeButton: Button
     private lateinit var partsModeButton: Button
-
     private lateinit var logo: TextView
 
     private var cameraProvider: ProcessCameraProvider? = null
 
-    private var selectedColor: Int = Color.rgb(40, 45, 55)
-    private var selectedColorCode = "ЦВЕТ НЕ ВЫБРАН"
+    private var selectedColor: Int =
+        Color.rgb(40, 45, 55)
+
+    private var selectedColorCode =
+        "ЦВЕТ НЕ ВЫБРАН"
+
     private var selectedMode = "body"
 
     private val cameraPermission =
@@ -86,7 +89,7 @@ class MainActivity : AppCompatActivity() {
 
         logo = findViewById(R.id.logo)
 
-        // МЕТАЛЛИЧЕСКИЙ ЛОГОТИП
+        // ПОЛИРОВАННЫЙ МЕТАЛЛИЧЕСКИЙ ЛОГОТИП
         applyMetallicLogo(logo)
 
         homeScreen.visibility = View.VISIBLE
@@ -134,48 +137,53 @@ class MainActivity : AppCompatActivity() {
         updateModeButtons()
     }
 
-    // МЕТАЛЛИЧЕСКИЙ СЕРЕБРИСТЫЙ ГРАДИЕНТ
+    // ПОЛИРОВАННЫЙ СЕРЕБРИСТЫЙ ХРОМ
     private fun applyMetallicLogo(logo: TextView) {
 
         logo.post {
 
-            val logoHeight = logo.height.toFloat()
+            val height = logo.height.toFloat()
+                .coerceAtLeast(1f)
 
-            val metallicColors = intArrayOf(
-                Color.rgb(75, 91, 111),
-                Color.rgb(190, 211, 232),
-                Color.rgb(105, 124, 146),
-                Color.rgb(245, 249, 255),
-                Color.rgb(135, 155, 179),
-                Color.rgb(220, 232, 245),
-                Color.rgb(75, 91, 111)
+            val chromeColors = intArrayOf(
+
+                Color.rgb(95, 108, 124),
+                Color.rgb(175, 190, 207),
+                Color.rgb(238, 245, 253),
+                Color.rgb(255, 255, 255),
+                Color.rgb(193, 207, 224),
+                Color.rgb(135, 151, 171),
+                Color.rgb(220, 231, 244),
+                Color.rgb(248, 251, 255)
             )
 
             val positions = floatArrayOf(
-                0.0f,
-                0.18f,
-                0.32f,
-                0.48f,
-                0.62f,
-                0.82f,
-                1.0f
+                0.00f,
+                0.16f,
+                0.29f,
+                0.39f,
+                0.53f,
+                0.69f,
+                0.85f,
+                1.00f
             )
 
             logo.paint.shader = LinearGradient(
                 0f,
                 0f,
                 0f,
-                logoHeight.coerceAtLeast(1f),
-                metallicColors,
+                height,
+                chromeColors,
                 positions,
                 Shader.TileMode.CLAMP
             )
 
+            // МЯГКОЕ ГОЛУБОЕ СВЕЧЕНИЕ
             logo.setShadowLayer(
-                14f,
+                9f,
                 0f,
                 0f,
-                Color.rgb(145, 190, 235)
+                Color.argb(65, 110, 185, 255)
             )
 
             logo.invalidate()
@@ -184,8 +192,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateModeButtons() {
 
-        bodyModeButton.isSelected = selectedMode == "body"
-        partsModeButton.isSelected = selectedMode == "parts"
+        bodyModeButton.isSelected =
+            selectedMode == "body"
+
+        partsModeButton.isSelected =
+            selectedMode == "parts"
     }
 
     private fun requestCamera() {
@@ -198,7 +209,9 @@ class MainActivity : AppCompatActivity() {
         ) {
             openCamera()
         } else {
-            cameraPermission.launch(Manifest.permission.CAMERA)
+            cameraPermission.launch(
+                Manifest.permission.CAMERA
+            )
         }
     }
 
@@ -208,7 +221,8 @@ class MainActivity : AppCompatActivity() {
         cameraScreen.visibility = View.VISIBLE
         cameraPreview.visibility = View.VISIBLE
 
-        val future = ProcessCameraProvider.getInstance(this)
+        val future =
+            ProcessCameraProvider.getInstance(this)
 
         future.addListener({
 
@@ -255,7 +269,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun readSampleColor(uri: Uri) {
 
-        var bitmap: android.graphics.Bitmap? = null
+        var bitmap: Bitmap? = null
 
         try {
 
@@ -264,11 +278,20 @@ class MainActivity : AppCompatActivity() {
             }
 
             contentResolver.openInputStream(uri)?.use {
-                BitmapFactory.decodeStream(it, null, bounds)
+                BitmapFactory.decodeStream(
+                    it,
+                    null,
+                    bounds
+                )
             }
 
-            if (bounds.outWidth <= 0 || bounds.outHeight <= 0) {
-                throw IllegalArgumentException("Invalid image")
+            if (
+                bounds.outWidth <= 0 ||
+                bounds.outHeight <= 0
+            ) {
+                throw IllegalArgumentException(
+                    "Invalid image"
+                )
             }
 
             var sample = 1
@@ -284,12 +307,19 @@ class MainActivity : AppCompatActivity() {
                 inSampleSize = sample
             }
 
-            bitmap = contentResolver.openInputStream(uri)?.use {
-                BitmapFactory.decodeStream(it, null, options)
-            }
+            bitmap =
+                contentResolver.openInputStream(uri)?.use {
+                    BitmapFactory.decodeStream(
+                        it,
+                        null,
+                        options
+                    )
+                }
 
             val image = bitmap
-                ?: throw IllegalArgumentException("No bitmap")
+                ?: throw IllegalArgumentException(
+                    "No bitmap"
+                )
 
             val left = image.width / 3
             val right = image.width * 2 / 3
@@ -321,7 +351,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (count == 0L) {
-                throw IllegalArgumentException("Empty sample")
+                throw IllegalArgumentException(
+                    "Empty sample"
+                )
             }
 
             selectedColor = Color.rgb(
