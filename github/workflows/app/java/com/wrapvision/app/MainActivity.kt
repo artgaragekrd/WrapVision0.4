@@ -38,9 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bodyModeButton: Button
     private lateinit var partsModeButton: Button
 
-    private var selectedColor: Int =
-        Color.rgb(48, 52, 58)
-
+    private var selectedColor = Color.rgb(48, 52, 58)
     private var selectedMode = "body"
 
     private var cameraProvider: ProcessCameraProvider? = null
@@ -50,17 +48,13 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(
             ActivityResultContracts.GetContent()
         ) { uri: Uri? ->
-
-            if (uri != null) {
-                readSampleColor(uri)
-            }
+            uri?.let { readSampleColor(it) }
         }
 
     private val cameraPermission =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { granted ->
-
             if (granted) {
                 openCameraScreen()
             } else {
@@ -91,17 +85,17 @@ class MainActivity : AppCompatActivity() {
 
         val logo: TextView = findViewById(R.id.logo)
 
-        val startButton: Button =
-            findViewById(R.id.startPreviewButton)
+        val startButton =
+            findViewById<Button>(R.id.startPreviewButton)
 
-        val chooseColorButton: Button =
-            findViewById(R.id.chooseColorButton)
+        val chooseColorButton =
+            findViewById<Button>(R.id.chooseColorButton)
 
-        val projectsButton: Button =
-            findViewById(R.id.projectsButton)
+        val projectsButton =
+            findViewById<Button>(R.id.projectsButton)
 
-        val backButton: Button =
-            findViewById(R.id.backHomeButton)
+        val backButton =
+            findViewById<Button>(R.id.backHomeButton)
 
         applyMetallicLogo(logo)
 
@@ -139,48 +133,56 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // МЕТАЛЛИЧЕСКИЙ ЛОГОТИП
+    // PREMIUM CHROME LOGO
 
     private fun applyMetallicLogo(logo: TextView) {
 
         logo.post {
 
-            val height = logo.textSize
+            val logoHeight = logo.height.toFloat()
+
+            val metallicColors = intArrayOf(
+                Color.rgb(75, 91, 111),
+                Color.rgb(215, 226, 240),
+                Color.rgb(255, 255, 255),
+                Color.rgb(155, 174, 195),
+                Color.rgb(245, 250, 255),
+                Color.rgb(95, 117, 143),
+                Color.rgb(190, 211, 232)
+            )
+
+            val positions = floatArrayOf(
+                0.0f,
+                0.18f,
+                0.32f,
+                0.48f,
+                0.62f,
+                0.82f,
+                1.0f
+            )
 
             logo.paint.shader = LinearGradient(
                 0f,
                 0f,
                 0f,
-                height,
-                intArrayOf(
-                    Color.rgb(105, 120, 140),
-                    Color.rgb(245, 249, 255),
-                    Color.rgb(170, 190, 210),
-                    Color.rgb(255, 255, 255),
-                    Color.rgb(105, 125, 150)
-                ),
-                floatArrayOf(
-                    0f,
-                    0.25f,
-                    0.50f,
-                    0.72f,
-                    1f
-                ),
+                logoHeight.coerceAtLeast(1f),
+                metallicColors,
+                positions,
                 Shader.TileMode.CLAMP
             )
 
             logo.setShadowLayer(
-                9f,
+                5f,
                 0f,
-                0f,
-                Color.rgb(75, 160, 230)
+                1f,
+                Color.rgb(145, 190, 235)
             )
 
             logo.invalidate()
         }
     }
 
-    // ОБНОВЛЕНИЕ ВЫБРАННОГО ЦВЕТА
+    // SELECTED COLOR
 
     private fun updateSelectedColor() {
 
@@ -193,7 +195,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    // РЕЖИМ НАНЕСЕНИЯ
+    // BODY / PARTS MODE
 
     private fun updateModeButtons() {
 
@@ -222,29 +224,25 @@ class MainActivity : AppCompatActivity() {
         partsModeButton.backgroundTintList = null
     }
 
-    // ПРОВЕРКА РАЗРЕШЕНИЯ КАМЕРЫ
+    // CAMERA PERMISSION
 
     private fun checkCameraPermission() {
 
-        when {
-
+        if (
             ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-
-                openCameraScreen()
-            }
-
-            else -> {
-                cameraPermission.launch(
-                    Manifest.permission.CAMERA
-                )
-            }
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            openCameraScreen()
+        } else {
+            cameraPermission.launch(
+                Manifest.permission.CAMERA
+            )
         }
     }
 
-    // ОТКРЫТИЕ ЭКРАНА КАМЕРЫ
+    // OPEN CAMERA
 
     private fun openCameraScreen() {
 
@@ -254,7 +252,7 @@ class MainActivity : AppCompatActivity() {
         startCamera()
     }
 
-    // ВОЗВРАТ НА ГЛАВНЫЙ ЭКРАН
+    // BACK TO HOME
 
     private fun showHomeScreen() {
 
@@ -264,7 +262,7 @@ class MainActivity : AppCompatActivity() {
         cameraProvider?.unbindAll()
     }
 
-    // ЗАПУСК КАМЕРЫ
+    // START CAMERA
 
     private fun startCamera() {
 
@@ -308,7 +306,7 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
-    // ЗАГРУЗКА ОБРАЗЦА ЦВЕТА
+    // READ COLOR SAMPLE
 
     private fun readSampleColor(uri: Uri) {
 
@@ -332,8 +330,7 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
-            selectedColor =
-                getAverageCenterColor(bitmap)
+            selectedColor = getAverageCenterColor(bitmap)
 
             updateSelectedColor()
 
@@ -355,7 +352,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ОПРЕДЕЛЕНИЕ СРЕДНЕГО ЦВЕТА ОБРАЗЦА
+    // AVERAGE CENTER COLOR
 
     private fun getAverageCenterColor(
         bitmap: Bitmap
@@ -417,33 +414,28 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    // КНОПКА НАЗАД ANDROID
+    // ANDROID BACK BUTTON
 
     @Deprecated("Deprecated in Android API")
     override fun onBackPressed() {
 
-        if (
-            cameraScreen.visibility == View.VISIBLE
-        ) {
-
+        if (cameraScreen.visibility == View.VISIBLE) {
             showHomeScreen()
-
         } else {
-
             super.onBackPressed()
         }
     }
 
-    // ЗАКРЫТИЕ ПРИЛОЖЕНИЯ
+    // DESTROY
 
     override fun onDestroy() {
 
-        super.onDestroy()
+        cameraProvider?.unbindAll()
 
         if (::cameraExecutor.isInitialized) {
             cameraExecutor.shutdown()
         }
 
-        cameraProvider?.unbindAll()
+        super.onDestroy()
     }
 }
