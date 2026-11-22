@@ -1,3 +1,4 @@
+
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item>
@@ -5,35 +6,31 @@
             <gradient
                 android:type="linear"
                 android:angle="270"
-                android:startColor="#02050B"
-                android:centerColor="#101D2B"
-                android:endColor="#02060D" />
+                android:startColor="#020306"
+                android:centerColor="#080D15"
+                android:endColor="#020408" />
         </shape>
     </item>
 
     <item android:gravity="top">
         <shape android:shape="rectangle">
-            <size android:height="240dp" />
+            <size android:height="150dp" />
             <gradient
-                android:type="radial"
-                android:gradientRadius="260dp"
-                android:centerX="50%"
-                android:centerY="50%"
-                android:centerColor="#163B68"
+                android:type="linear"
+                android:angle="270"
+                android:startColor="#172B43"
                 android:endColor="#00000000" />
         </shape>
     </item>
 
     <item android:gravity="bottom">
         <shape android:shape="rectangle">
-            <size android:height="250dp" />
+            <size android:height="190dp" />
             <gradient
-                android:type="radial"
-                android:gradientRadius="240dp"
-                android:centerX="50%"
-                android:centerY="50%"
-                android:centerColor="#123D65"
-                android:endColor="#00000000" />
+                android:type="linear"
+                android:angle="270"
+                android:startColor="#00000000"
+                android:endColor="#102D49" />
         </shape>
     </item>
 
