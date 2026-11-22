@@ -1,41 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- ГЛУБОКИЙ ЧЁРНЫЙ ФОН -->
     <item>
         <shape android:shape="rectangle">
             <gradient
                 android:type="linear"
                 android:angle="270"
                 android:startColor="#101D2B"
-                android:centerColor="#05080D"
-                android:endColor="#03070D"
-                android:centerY="0.48" />
+                android:centerColor="#030609"
+                android:endColor="#102A43"
+                android:centerY="0.78" />
         </shape>
     </item>
 
-    <!-- СЛАБОЕ ВЕРХНЕЕ СВЕЧЕНИЕ -->
     <item>
         <shape android:shape="rectangle">
             <gradient
                 android:type="radial"
                 android:centerX="50%"
                 android:centerY="0%"
-                android:gradientRadius="330dp"
-                android:startColor="#243D6388"
-                android:endColor="#00000000" />
-        </shape>
-    </item>
-
-    <!-- ГОЛУБОЕ НИЖНЕЕ СВЕЧЕНИЕ -->
-    <item>
-        <shape android:shape="rectangle">
-            <gradient
-                android:type="radial"
-                android:centerX="50%"
-                android:centerY="100%"
-                android:gradientRadius="300dp"
-                android:startColor="#263B83B5"
+                android:gradientRadius="280dp"
+                android:startColor="#263C5A78"
                 android:endColor="#00000000" />
         </shape>
     </item>
