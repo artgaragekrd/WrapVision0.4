@@ -13,67 +13,82 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:background="@android:color/transparent"
-        android:paddingStart="22dp"
-        android:paddingEnd="22dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="12dp">
 
-        <TextView
-            android:id="@+id/logo"
-            android:layout_width="wrap_content"
+        <!-- ЛОГОТИП -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="WRAPVISION"
-            android:textColor="#DCE5F0"
-            android:textSize="29sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.16"
-            android:shadowColor="#4488CCFF"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="14" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="4dp"
+            android:paddingBottom="5dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:text="PREMIUM STUDIO"
-            android:textColor="#8294A8"
-            android:textSize="10sp"
-            android:letterSpacing="0.28" />
+            <TextView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WRAPVISION"
+                android:textColor="#EAF3FF"
+                android:textSize="27sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.17"
+                android:shadowColor="#0088DDFF"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="13" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="P R E M I U M   S T U D I O"
+                android:textColor="#A8BED6"
+                android:textSize="10sp"
+                android:letterSpacing="0.12" />
+
+        </LinearLayout>
+
+        <!-- АВТОМОБИЛЬ -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:foregroundGravity="center">
 
             <ImageView
                 android:id="@+id/carImage"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
                 android:src="@drawable/mustang_home"
                 android:scaleType="fitCenter"
-                android:contentDescription="Автомобиль Mustang" />
+                android:contentDescription="Ford Mustang Eleanor" />
 
         </FrameLayout>
 
-        <!-- ПАНЕЛЬ ВЫБРАННОГО ЦВЕТА -->
+        <!-- ВЫБРАННЫЙ ЦВЕТ -->
         <LinearLayout
             android:id="@+id/selectedColorPanel"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="68dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:background="@drawable/bg_panel">
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:background="@drawable/bg_panel"
+            android:elevation="5dp">
 
             <View
                 android:id="@+id/colorSwatch"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:background="@drawable/bg_swatch" />
 
             <LinearLayout
@@ -87,9 +102,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ВЫБРАННЫЙ ЦВЕТ"
-                    android:textColor="#8494A7"
-                    android:textSize="9sp"
-                    android:letterSpacing="0.15" />
+                    android:textColor="#91A8C0"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.14" />
 
                 <TextView
                     android:id="@+id/colorCode"
@@ -97,8 +112,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:text="#30343A"
-                    android:textColor="#E8EDF4"
-                    android:textSize="14sp"
+                    android:textColor="#F0F6FF"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -107,30 +122,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="●"
-                android:textColor="#55BFFF"
-                android:textSize="15sp" />
+                android:textColor="#35BFFF"
+                android:textSize="19sp"
+                android:shadowColor="#00A8FF"
+                android:shadowRadius="9" />
 
         </LinearLayout>
 
-        <!-- ОСНОВНАЯ КНОПКА -->
+        <!-- НАЧАТЬ ПРОСМОТР -->
         <Button
             android:id="@+id/startPreviewButton"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginTop="14dp"
+            android:layout_height="62dp"
+            android:layout_marginTop="12dp"
             android:text="НАЧАТЬ ПРОСМОТР"
-            android:textColor="#F1F6FC"
-            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
             android:textStyle="bold"
-            android:letterSpacing="0.08"
+            android:letterSpacing="0.07"
             android:background="@drawable/bg_button_primary"
             android:backgroundTint="@null"
-            android:elevation="5dp" />
+            android:elevation="7dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp" />
 
         <!-- НИЖНИЕ КНОПКИ -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="56dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:gravity="center"
@@ -143,10 +162,10 @@
                 android:layout_weight="1"
                 android:layout_marginEnd="5dp"
                 android:text="ВЫБРАТЬ ЦВЕТ"
-                android:textColor="#DCE5EF"
+                android:textColor="#E5F0FF"
                 android:textSize="11sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.03"
+                android:letterSpacing="0.02"
                 android:background="@drawable/bg_button_secondary"
                 android:backgroundTint="@null"
                 android:insetTop="0dp"
@@ -159,10 +178,10 @@
                 android:layout_weight="1"
                 android:layout_marginStart="5dp"
                 android:text="МОИ ПРОЕКТЫ"
-                android:textColor="#DCE5EF"
+                android:textColor="#E5F0FF"
                 android:textSize="11sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.03"
+                android:letterSpacing="0.02"
                 android:background="@drawable/bg_button_secondary"
                 android:backgroundTint="@null"
                 android:insetTop="0dp"
@@ -186,48 +205,52 @@
             android:layout_height="match_parent"
             app:scaleType="fillCenter" />
 
+        <!-- ЗАГОЛОВОК КАМЕРЫ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:orientation="vertical"
             android:padding="18dp"
-            android:background="#CC080B10">
+            android:background="#DD080B10">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="WRAPVISION"
-                android:textColor="#E5EDF7"
+                android:textColor="#EAF3FF"
                 android:textSize="21sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.12" />
+                android:letterSpacing="0.12"
+                android:shadowColor="#0088DDFF"
+                android:shadowRadius="8" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="РЕЖИМ ПРОСМОТРА"
-                android:textColor="#69BFFF"
+                android:textColor="#55BFFF"
                 android:textSize="11sp"
                 android:letterSpacing="0.15" />
 
         </LinearLayout>
 
+        <!-- УПРАВЛЕНИЕ КАМЕРОЙ -->
         <LinearLayout
             android:id="@+id/cameraControls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:orientation="vertical"
-            android:padding="18dp"
-            android:background="#E6090C12">
+            android:padding="16dp"
+            android:background="#F0080B12">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ОБЛАСТЬ НАНЕСЕНИЯ"
-                android:textColor="#AAB8C8"
+                android:textColor="#AABDD2"
                 android:textSize="10sp"
                 android:letterSpacing="0.12" />
 
@@ -259,7 +282,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="5dp"
                     android:text="ОТДЕЛЬНЫЕ ЭЛЕМЕНТЫ"
-                    android:textColor="#DCE5EF"
+                    android:textColor="#DCE8F5"
                     android:textSize="10sp"
                     android:background="@drawable/bg_button_secondary"
                     android:backgroundTint="@null"
@@ -271,10 +294,10 @@
             <Button
                 android:id="@+id/backHomeButton"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="11dp"
                 android:text="НАЗАД"
-                android:textColor="#DCE5EF"
+                android:textColor="#E5F0FF"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:background="@drawable/bg_button_dark"
