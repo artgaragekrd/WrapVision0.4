@@ -13,7 +13,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,13 +22,11 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var homeScreen: View
-    private lateinit var cameraScreen: FrameLayout
+    private lateinit var cameraScreen: View
     private lateinit var cameraPreview: PreviewView
 
     private lateinit var colorSwatch: View
@@ -38,40 +35,43 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bodyModeButton: Button
     private lateinit var partsModeButton: Button
 
-    private var selectedColor = Color.rgb(48, 52, 58)
-    private var selectedMode = "body"
-
     private var cameraProvider: ProcessCameraProvider? = null
-    private lateinit var cameraExecutor: ExecutorService
 
-    private val imagePicker =
-        registerForActivityResult(
-            ActivityResultContracts.GetContent()
-        ) { uri: Uri? ->
-            uri?.let { readSampleColor(it) }
-        }
+    private var selectedColor = Color.rgb(48, 52, 58)
+    private var selectedColorCode = "#30343A"
+    private var selectedMode = "body"
 
     private val cameraPermission =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { granted ->
             if (granted) {
-                openCameraScreen()
+                openCamera()
             } else {
                 Toast.makeText(
                     this,
-                    "Для просмотра необходимо разрешение камеры",
+                    "Необходимо разрешить доступ к камере",
                     Toast.LENGTH_LONG
                 ).show()
+            }
+        }
+
+    private val colorPicker =
+        registerForActivityResult(
+            ActivityResultContracts.GetContent()
+        ) { uri ->
+            if (uri != null) {
+                readSampleColor(uri)
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+        window.statusBarColor = Color.rgb(7, 10, 15)
+        window.navigationBarColor = Color.rgb(7, 10, 15)
 
-        cameraExecutor = Executors.newSingleThreadExecutor()
+        setContentView(R.layout.activity_main)
 
         homeScreen = findViewById(R.id.homeScreen)
         cameraScreen = findViewById(R.id.cameraScreen)
@@ -83,40 +83,41 @@ class MainActivity : AppCompatActivity() {
         bodyModeButton = findViewById(R.id.bodyModeButton)
         partsModeButton = findViewById(R.id.partsModeButton)
 
-        val logo: TextView = findViewById(R.id.logo)
+        val logo = findViewById<TextView>(R.id.logo)
+        val logoEmblem = findViewById<TextView>(R.id.logoEmblem)
 
-        val startButton =
-            findViewById<Button>(R.id.startPreviewButton)
+        applyMetallicEffect(logo)
+        applyMetallicEffect(logoEmblem)
 
-        val chooseColorButton =
-            findViewById<Button>(R.id.chooseColorButton)
-
-        val projectsButton =
-            findViewById<Button>(R.id.projectsButton)
-
-        val backButton =
-            findViewById<Button>(R.id.backHomeButton)
-
-        applyMetallicLogo(logo)
+        homeScreen.visibility = View.VISIBLE
+        cameraScreen.visibility = View.GONE
 
         updateSelectedColor()
         updateModeButtons()
 
-        startButton.setOnClickListener {
-            checkCameraPermission()
-        }
+        findViewById<Button>(R.id.startPreviewButton)
+            .setOnClickListener {
+                requestCamera()
+            }
 
-        chooseColorButton.setOnClickListener {
-            imagePicker.launch("image/*")
-        }
+        findViewById<Button>(R.id.chooseColorButton)
+            .setOnClickListener {
+                colorPicker.launch("image/*")
+            }
 
-        projectsButton.setOnClickListener {
-            Toast.makeText(
-                this,
-                "Раздел проектов будет добавлен на следующем этапе",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        findViewById<Button>(R.id.projectsButton)
+            .setOnClickListener {
+                Toast.makeText(
+                    this,
+                    "Раздел проектов будет добавлен следующим этапом",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        findViewById<Button>(R.id.backHomeButton)
+            .setOnClickListener {
+                returnHome()
+            }
 
         bodyModeButton.setOnClickListener {
             selectedMode = "body"
@@ -127,24 +128,20 @@ class MainActivity : AppCompatActivity() {
             selectedMode = "parts"
             updateModeButtons()
         }
-
-        backButton.setOnClickListener {
-            showHomeScreen()
-        }
     }
 
-    // PREMIUM CHROME LOGO
+    // МЕТАЛЛИЧЕСКИЙ ЭФФЕКТ ЛОГОТИПА
 
-    private fun applyMetallicLogo(logo: TextView) {
+    private fun applyMetallicEffect(view: TextView) {
 
-        logo.post {
+        view.post {
 
-            val logoHeight = logo.height.toFloat()
+            val height = view.height.toFloat().coerceAtLeast(1f)
 
             val metallicColors = intArrayOf(
                 Color.rgb(75, 91, 111),
                 Color.rgb(215, 226, 240),
-                Color.rgb(255, 255, 255),
+                Color.WHITE,
                 Color.rgb(155, 174, 195),
                 Color.rgb(245, 250, 255),
                 Color.rgb(95, 117, 143),
@@ -161,72 +158,48 @@ class MainActivity : AppCompatActivity() {
                 1.0f
             )
 
-            logo.paint.shader = LinearGradient(
+            view.paint.shader = LinearGradient(
                 0f,
                 0f,
                 0f,
-                logoHeight.coerceAtLeast(1f),
+                height,
                 metallicColors,
                 positions,
                 Shader.TileMode.CLAMP
             )
 
-            logo.setShadowLayer(
+            view.setShadowLayer(
                 5f,
                 0f,
                 1f,
-                Color.rgb(145, 190, 235)
+                Color.rgb(100, 175, 235)
             )
 
-            logo.invalidate()
+            view.invalidate()
         }
     }
 
-    // SELECTED COLOR
+    // ВЫБРАННЫЙ ЦВЕТ
 
     private fun updateSelectedColor() {
 
         colorSwatch.backgroundTintList =
             ColorStateList.valueOf(selectedColor)
 
-        colorCode.text = String.format(
-            "#%06X",
-            0xFFFFFF and selectedColor
-        )
+        colorCode.text = selectedColorCode
     }
 
-    // BODY / PARTS MODE
+    // РЕЖИМ НАНЕСЕНИЯ
 
     private fun updateModeButtons() {
 
-        if (selectedMode == "body") {
-
-            bodyModeButton.setBackgroundResource(
-                R.drawable.bg_button_selected
-            )
-
-            partsModeButton.setBackgroundResource(
-                R.drawable.bg_button_secondary
-            )
-
-        } else {
-
-            bodyModeButton.setBackgroundResource(
-                R.drawable.bg_button_secondary
-            )
-
-            partsModeButton.setBackgroundResource(
-                R.drawable.bg_button_selected
-            )
-        }
-
-        bodyModeButton.backgroundTintList = null
-        partsModeButton.backgroundTintList = null
+        bodyModeButton.isSelected = selectedMode == "body"
+        partsModeButton.isSelected = selectedMode == "parts"
     }
 
-    // CAMERA PERMISSION
+    // РАЗРЕШЕНИЕ КАМЕРЫ
 
-    private fun checkCameraPermission() {
+    private fun requestCamera() {
 
         if (
             ContextCompat.checkSelfPermission(
@@ -234,208 +207,188 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            openCameraScreen()
+            openCamera()
         } else {
-            cameraPermission.launch(
-                Manifest.permission.CAMERA
-            )
+            cameraPermission.launch(Manifest.permission.CAMERA)
         }
     }
 
-    // OPEN CAMERA
+    // ОТКРЫТИЕ КАМЕРЫ
 
-    private fun openCameraScreen() {
+    private fun openCamera() {
 
         homeScreen.visibility = View.GONE
         cameraScreen.visibility = View.VISIBLE
+        cameraPreview.visibility = View.VISIBLE
 
-        startCamera()
-    }
+        val future = ProcessCameraProvider.getInstance(this)
 
-    // BACK TO HOME
-
-    private fun showHomeScreen() {
-
-        cameraScreen.visibility = View.GONE
-        homeScreen.visibility = View.VISIBLE
-
-        cameraProvider?.unbindAll()
-    }
-
-    // START CAMERA
-
-    private fun startCamera() {
-
-        val cameraProviderFuture =
-            ProcessCameraProvider.getInstance(this)
-
-        cameraProviderFuture.addListener({
+        future.addListener({
 
             try {
-
-                val provider = cameraProviderFuture.get()
-
+                val provider = future.get()
                 cameraProvider = provider
 
                 val preview = Preview.Builder().build()
 
-                preview.setSurfaceProvider(
+                preview.surfaceProvider =
                     cameraPreview.surfaceProvider
-                )
-
-                val cameraSelector =
-                    CameraSelector.DEFAULT_BACK_CAMERA
 
                 provider.unbindAll()
 
                 provider.bindToLifecycle(
                     this,
-                    cameraSelector,
+                    CameraSelector.DEFAULT_BACK_CAMERA,
                     preview
                 )
 
-            } catch (exception: Exception) {
+            } catch (e: Exception) {
 
                 Toast.makeText(
                     this,
-                    "Не удалось запустить камеру: ${exception.message}",
+                    "Не удалось запустить камеру",
                     Toast.LENGTH_LONG
                 ).show()
+
+                returnHome()
             }
 
         }, ContextCompat.getMainExecutor(this))
     }
 
-    // READ COLOR SAMPLE
+    // ВОЗВРАТ НА ГЛАВНЫЙ ЭКРАН
+
+    private fun returnHome() {
+
+        cameraProvider?.unbindAll()
+
+        cameraPreview.visibility = View.GONE
+        cameraScreen.visibility = View.GONE
+        homeScreen.visibility = View.VISIBLE
+    }
+
+    // ЗАГРУЗКА ОБРАЗЦА ЦВЕТА
 
     private fun readSampleColor(uri: Uri) {
 
+        var bitmap: Bitmap? = null
+
         try {
-
-            val inputStream =
-                contentResolver.openInputStream(uri)
-
-            val bitmap = inputStream?.use {
-                BitmapFactory.decodeStream(it)
+            val bounds = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
             }
 
-            if (bitmap == null) {
-
-                Toast.makeText(
-                    this,
-                    "Не удалось открыть изображение",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                return
+            contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, bounds)
             }
 
-            selectedColor = getAverageCenterColor(bitmap)
+            if (bounds.outWidth <= 0 || bounds.outHeight <= 0) {
+                throw IllegalArgumentException("Invalid image")
+            }
+
+            var sample = 1
+
+            while (
+                bounds.outWidth / sample > 1024 ||
+                bounds.outHeight / sample > 1024
+            ) {
+                sample *= 2
+            }
+
+            val options = BitmapFactory.Options().apply {
+                inSampleSize = sample
+            }
+
+            bitmap = contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, options)
+            }
+
+            val image = bitmap
+                ?: throw IllegalArgumentException("No bitmap")
+
+            val left = image.width / 3
+            val right = image.width * 2 / 3
+            val top = image.height / 3
+            val bottom = image.height * 2 / 3
+
+            var red = 0L
+            var green = 0L
+            var blue = 0L
+            var count = 0L
+
+            val step = maxOf(
+                1,
+                minOf(image.width, image.height) / 100
+            )
+
+            for (y in top until bottom step step) {
+                for (x in left until right step step) {
+
+                    val pixel = image.getPixel(x, y)
+
+                    red += Color.red(pixel)
+                    green += Color.green(pixel)
+                    blue += Color.blue(pixel)
+
+                    count++
+                }
+            }
+
+            if (count == 0L) {
+                throw IllegalArgumentException("Empty sample")
+            }
+
+            selectedColor = Color.rgb(
+                (red / count).toInt(),
+                (green / count).toInt(),
+                (blue / count).toInt()
+            )
+
+            selectedColorCode = String.format(
+                "#%06X",
+                0xFFFFFF and selectedColor
+            )
 
             updateSelectedColor()
 
             Toast.makeText(
                 this,
-                "Цвет образца выбран",
+                "Выбран цвет: $selectedColorCode",
                 Toast.LENGTH_SHORT
             ).show()
 
-            bitmap.recycle()
-
-        } catch (exception: Exception) {
+        } catch (e: Exception) {
 
             Toast.makeText(
                 this,
-                "Ошибка чтения изображения",
+                "Не удалось обработать изображение",
                 Toast.LENGTH_SHORT
             ).show()
+
+        } finally {
+            bitmap?.recycle()
         }
     }
 
-    // AVERAGE CENTER COLOR
+    // СИСТЕМНАЯ КНОПКА НАЗАД
 
-    private fun getAverageCenterColor(
-        bitmap: Bitmap
-    ): Int {
-
-        val width = bitmap.width
-        val height = bitmap.height
-
-        val left = width / 3
-        val right = (width * 2) / 3
-        val top = height / 3
-        val bottom = (height * 2) / 3
-
-        var red = 0L
-        var green = 0L
-        var blue = 0L
-        var count = 0L
-
-        val stepX = maxOf(
-            1,
-            (right - left) / 50
-        )
-
-        val stepY = maxOf(
-            1,
-            (bottom - top) / 50
-        )
-
-        var y = top
-
-        while (y < bottom) {
-
-            var x = left
-
-            while (x < right) {
-
-                val pixel = bitmap.getPixel(x, y)
-
-                red += Color.red(pixel)
-                green += Color.green(pixel)
-                blue += Color.blue(pixel)
-
-                count++
-
-                x += stepX
-            }
-
-            y += stepY
-        }
-
-        if (count == 0L) {
-            return Color.DKGRAY
-        }
-
-        return Color.rgb(
-            (red / count).toInt(),
-            (green / count).toInt(),
-            (blue / count).toInt()
-        )
-    }
-
-    // ANDROID BACK BUTTON
-
-    @Deprecated("Deprecated in Android API")
+    @Deprecated("Deprecated in Android")
     override fun onBackPressed() {
 
-        if (cameraScreen.visibility == View.VISIBLE) {
-            showHomeScreen()
+        if (
+            ::cameraScreen.isInitialized &&
+            cameraScreen.visibility == View.VISIBLE
+        ) {
+            returnHome()
         } else {
             super.onBackPressed()
         }
     }
 
-    // DESTROY
+    // ЗАКРЫТИЕ ПРИЛОЖЕНИЯ
 
     override fun onDestroy() {
-
         cameraProvider?.unbindAll()
-
-        if (::cameraExecutor.isInitialized) {
-            cameraExecutor.shutdown()
-        }
-
         super.onDestroy()
     }
 }
