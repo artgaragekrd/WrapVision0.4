@@ -59,10 +59,8 @@ class MainActivity : AppCompatActivity() {
     private val colorPicker =
         registerForActivityResult(
             ActivityResultContracts.GetContent()
-        ) { uri ->
-            if (uri != null) {
-                readSampleColor(uri)
-            }
+        ) { uri: Uri? ->
+            uri?.let { readSampleColor(it) }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -133,7 +131,6 @@ class MainActivity : AppCompatActivity() {
     // МЕТАЛЛИЧЕСКИЙ ЭФФЕКТ ЛОГОТИПА
 
     private fun applyMetallicEffect(view: TextView) {
-
         view.post {
 
             val height = view.height.toFloat().coerceAtLeast(1f)
@@ -182,22 +179,45 @@ class MainActivity : AppCompatActivity() {
     // ВЫБРАННЫЙ ЦВЕТ
 
     private fun updateSelectedColor() {
-
         colorSwatch.backgroundTintList =
             ColorStateList.valueOf(selectedColor)
 
         colorCode.text = selectedColorCode
     }
 
-    // РЕЖИМ НАНЕСЕНИЯ
+    // ПОДСВЕТКА ВЫБРАННОГО РЕЖИМА
 
     private fun updateModeButtons() {
+
+        if (selectedMode == "body") {
+
+            bodyModeButton.setBackgroundResource(
+                R.drawable.bg_button_selected
+            )
+
+            partsModeButton.setBackgroundResource(
+                R.drawable.bg_button_secondary
+            )
+
+        } else {
+
+            bodyModeButton.setBackgroundResource(
+                R.drawable.bg_button_secondary
+            )
+
+            partsModeButton.setBackgroundResource(
+                R.drawable.bg_button_selected
+            )
+        }
+
+        bodyModeButton.backgroundTintList = null
+        partsModeButton.backgroundTintList = null
 
         bodyModeButton.isSelected = selectedMode == "body"
         partsModeButton.isSelected = selectedMode == "parts"
     }
 
-    // РАЗРЕШЕНИЕ КАМЕРЫ
+    // ПРОВЕРКА РАЗРЕШЕНИЯ КАМЕРЫ
 
     private fun requestCamera() {
 
@@ -231,8 +251,9 @@ class MainActivity : AppCompatActivity() {
 
                 val preview = Preview.Builder().build()
 
-                preview.surfaceProvider =
+                preview.setSurfaceProvider(
                     cameraPreview.surfaceProvider
+                )
 
                 provider.unbindAll()
 
@@ -246,7 +267,7 @@ class MainActivity : AppCompatActivity() {
 
                 Toast.makeText(
                     this,
-                    "Не удалось запустить камеру",
+                    "Не удалось запустить камеру: ${e.message}",
                     Toast.LENGTH_LONG
                 ).show()
 
