@@ -1,31 +1,56 @@
-
+<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- ОСНОВНОЙ ГЛУБОКИЙ ФОН -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#030509" />
-        </shape>
-    </item>
-
-    <item android:gravity="top">
-        <shape android:shape="rectangle">
-            <size android:height="170dp" />
             <gradient
                 android:type="linear"
                 android:angle="270"
-                android:startColor="#172638"
+                android:startColor="#14283E"
+                android:centerColor="#070C13"
+                android:endColor="#020509"
+                android:centerY="0.48" />
+        </shape>
+    </item>
+
+    <!-- ВЕРХНЕЕ ГОЛУБОЕ СВЕЧЕНИЕ -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="50%"
+                android:centerY="12%"
+                android:gradientRadius="420dp"
+                android:startColor="#443B82C0"
+                android:centerColor="#18234E75"
                 android:endColor="#00000000" />
         </shape>
     </item>
 
-    <item android:gravity="bottom">
+    <!-- НИЖНЯЯ НЕОНОВАЯ ПОДСВЕТКА -->
+    <item>
         <shape android:shape="rectangle">
-            <size android:height="170dp" />
+            <gradient
+                android:type="radial"
+                android:centerX="50%"
+                android:centerY="100%"
+                android:gradientRadius="390dp"
+                android:startColor="#38418CC5"
+                android:centerColor="#172B537D"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- ЦЕНТРАЛЬНАЯ ТЁМНАЯ СТУДИЙНАЯ ЗОНА -->
+    <item>
+        <shape android:shape="rectangle">
             <gradient
                 android:type="linear"
-                android:angle="270"
+                android:angle="90"
                 android:startColor="#00000000"
-                android:endColor="#102A43" />
+                android:centerColor="#3003070D"
+                android:endColor="#00000000" />
         </shape>
     </item>
 
