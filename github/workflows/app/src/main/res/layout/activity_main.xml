@@ -7,7 +7,6 @@
     android:fitsSystemWindows="true"
     android:background="@drawable/bg_studio">
 
-    <!-- ГЛАВНЫЙ ЭКРАН -->
     <LinearLayout
         android:id="@+id/homeScreen"
         android:layout_width="match_parent"
@@ -16,36 +15,36 @@
         android:gravity="center_horizontal"
         android:paddingStart="18dp"
         android:paddingEnd="18dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="12dp">
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp">
 
         <!-- ЛОГОТИП -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:orientation="vertical"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp">
 
             <TextView
                 android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="WRAPVISION"
-                android:textColor="#EAF3FF"
-                android:textSize="29sp"
+                android:textColor="#EAF2FC"
+                android:textSize="28sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.16"
-                android:shadowColor="#6699CCFF"
+                android:shadowColor="#779BC8E8"
                 android:shadowDx="0"
                 android:shadowDy="0"
-                android:shadowRadius="12" />
+                android:shadowRadius="13" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="2dp"
                 android:text="P R E M I U M   S T U D I O"
                 android:textColor="#91A5BD"
                 android:textSize="10sp"
@@ -53,14 +52,14 @@
 
         </LinearLayout>
 
-        <!-- АВТОМОБИЛЬ -->
+        <!-- ЗОНА АВТОМОБИЛЯ -->
         <FrameLayout
+            android:id="@+id/carContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:minHeight="180dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="12dp">
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="4dp">
 
             <ImageView
                 android:id="@+id/carImage"
@@ -74,15 +73,15 @@
 
         </FrameLayout>
 
-        <!-- ВЫБРАННЫЙ ЦВЕТ -->
+        <!-- ПАНЕЛЬ ЦВЕТА -->
         <LinearLayout
             android:id="@+id/selectedColorPanel"
             android:layout_width="match_parent"
             android:layout_height="68dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
             android:background="@drawable/bg_panel"
             android:elevation="5dp">
 
@@ -130,12 +129,12 @@
 
         </LinearLayout>
 
-        <!-- ГЛАВНАЯ КНОПКА -->
+        <!-- ОСНОВНАЯ КНОПКА -->
         <Button
             android:id="@+id/startPreviewButton"
             android:layout_width="match_parent"
             android:layout_height="62dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="11dp"
             android:text="НАЧАТЬ ПРОСМОТР"
             android:textColor="#F1F6FC"
             android:textSize="15sp"
@@ -151,7 +150,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="9dp"
             android:orientation="horizontal"
             android:gravity="center"
             android:weightSum="2">
