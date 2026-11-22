@@ -1,3 +1,4 @@
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
@@ -32,7 +33,7 @@
             android:shadowRadius="16"
             android:letterSpacing="0.04" />
 
-        <!-- МЕТАЛЛИЧЕСКИЙ ЛОГОТИП -->
+        <!-- ЛОГОТИП -->
         <TextView
             android:id="@+id/logo"
             android:layout_width="match_parent"
@@ -64,7 +65,9 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
             <ImageView
                 android:id="@+id/carImage"
@@ -72,8 +75,9 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:src="@drawable/mustang_home"
-                android:scaleType="centerCrop"
+                android:scaleType="centerInside"
                 android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
                 android:contentDescription="Ford Mustang Eleanor" />
 
         </FrameLayout>
