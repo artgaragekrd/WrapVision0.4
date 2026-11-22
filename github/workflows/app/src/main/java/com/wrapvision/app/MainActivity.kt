@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -31,6 +33,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bodyModeButton: Button
     private lateinit var partsModeButton: Button
+
+    private lateinit var logo: TextView
 
     private var cameraProvider: ProcessCameraProvider? = null
 
@@ -80,6 +84,11 @@ class MainActivity : AppCompatActivity() {
         bodyModeButton = findViewById(R.id.bodyModeButton)
         partsModeButton = findViewById(R.id.partsModeButton)
 
+        logo = findViewById(R.id.logo)
+
+        // МЕТАЛЛИЧЕСКИЙ ЛОГОТИП
+        applyMetallicLogo(logo)
+
         homeScreen.visibility = View.VISIBLE
         cameraScreen.visibility = View.GONE
 
@@ -125,12 +134,62 @@ class MainActivity : AppCompatActivity() {
         updateModeButtons()
     }
 
+    // МЕТАЛЛИЧЕСКИЙ СЕРЕБРИСТЫЙ ГРАДИЕНТ
+    private fun applyMetallicLogo(logo: TextView) {
+
+        logo.post {
+
+            val logoHeight = logo.height.toFloat()
+
+            val metallicColors = intArrayOf(
+                Color.rgb(75, 91, 111),
+                Color.rgb(190, 211, 232),
+                Color.rgb(105, 124, 146),
+                Color.rgb(245, 249, 255),
+                Color.rgb(135, 155, 179),
+                Color.rgb(220, 232, 245),
+                Color.rgb(75, 91, 111)
+            )
+
+            val positions = floatArrayOf(
+                0.0f,
+                0.18f,
+                0.32f,
+                0.48f,
+                0.62f,
+                0.82f,
+                1.0f
+            )
+
+            logo.paint.shader = LinearGradient(
+                0f,
+                0f,
+                0f,
+                logoHeight.coerceAtLeast(1f),
+                metallicColors,
+                positions,
+                Shader.TileMode.CLAMP
+            )
+
+            logo.setShadowLayer(
+                14f,
+                0f,
+                0f,
+                Color.rgb(145, 190, 235)
+            )
+
+            logo.invalidate()
+        }
+    }
+
     private fun updateModeButtons() {
+
         bodyModeButton.isSelected = selectedMode == "body"
         partsModeButton.isSelected = selectedMode == "parts"
     }
 
     private fun requestCamera() {
+
         if (
             ContextCompat.checkSelfPermission(
                 this,
@@ -144,6 +203,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openCamera() {
+
         homeScreen.visibility = View.GONE
         cameraScreen.visibility = View.VISIBLE
         cameraPreview.visibility = View.VISIBLE
@@ -151,11 +211,14 @@ class MainActivity : AppCompatActivity() {
         val future = ProcessCameraProvider.getInstance(this)
 
         future.addListener({
+
             try {
+
                 val provider = future.get()
                 cameraProvider = provider
 
                 val preview = Preview.Builder().build()
+
                 preview.surfaceProvider =
                     cameraPreview.surfaceProvider
 
@@ -168,6 +231,7 @@ class MainActivity : AppCompatActivity() {
                 )
 
             } catch (e: Exception) {
+
                 Toast.makeText(
                     this,
                     "Не удалось запустить камеру",
@@ -176,10 +240,12 @@ class MainActivity : AppCompatActivity() {
 
                 returnHome()
             }
+
         }, ContextCompat.getMainExecutor(this))
     }
 
     private fun returnHome() {
+
         cameraProvider?.unbindAll()
 
         cameraPreview.visibility = View.GONE
@@ -188,9 +254,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun readSampleColor(uri: Uri) {
+
         var bitmap: android.graphics.Bitmap? = null
 
         try {
+
             val bounds = BitmapFactory.Options().apply {
                 inJustDecodeBounds = true
             }
@@ -239,12 +307,15 @@ class MainActivity : AppCompatActivity() {
             )
 
             for (y in top until bottom step step) {
+
                 for (x in left until right step step) {
+
                     val pixel = image.getPixel(x, y)
 
                     red += Color.red(pixel)
                     green += Color.green(pixel)
                     blue += Color.blue(pixel)
+
                     count++
                 }
             }
@@ -276,6 +347,7 @@ class MainActivity : AppCompatActivity() {
             ).show()
 
         } catch (e: Exception) {
+
             Toast.makeText(
                 this,
                 "Не удалось обработать изображение",
@@ -283,18 +355,23 @@ class MainActivity : AppCompatActivity() {
             ).show()
 
         } finally {
+
             bitmap?.recycle()
         }
     }
 
     override fun onDestroy() {
+
         cameraProvider?.unbindAll()
+
         super.onDestroy()
     }
 
     @Deprecated("Deprecated in Android")
     override fun onBackPressed() {
-        if (::cameraScreen.isInitialized &&
+
+        if (
+            ::cameraScreen.isInitialized &&
             cameraScreen.visibility == View.VISIBLE
         ) {
             returnHome()
