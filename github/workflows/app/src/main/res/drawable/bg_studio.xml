@@ -1,6 +1,6 @@
-
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- ОСНОВНОЙ ЧЁРНЫЙ ФОН -->
     <item>
         <shape android:shape="rectangle">
             <gradient
@@ -12,6 +12,7 @@
         </shape>
     </item>
 
+    <!-- ВЕРХНЕЕ ГОЛУБОЕ СВЕЧЕНИЕ -->
     <item android:gravity="top">
         <shape android:shape="rectangle">
             <size android:height="150dp" />
@@ -23,6 +24,7 @@
         </shape>
     </item>
 
+    <!-- НИЖНЕЕ НЕОНОВОЕ СВЕЧЕНИЕ -->
     <item android:gravity="bottom">
         <shape android:shape="rectangle">
             <size android:height="190dp" />
