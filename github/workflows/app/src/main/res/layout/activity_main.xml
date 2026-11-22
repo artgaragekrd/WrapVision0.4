@@ -49,6 +49,7 @@
             android:shadowDy="0"
             android:shadowRadius="12" />
 
+        <!-- ПОДЗАГОЛОВОК -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,8 +76,9 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:src="@drawable/mustang_home"
-                android:scaleType="centerInside"
+                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
+                android:padding="0dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="Ford Mustang Eleanor" />
 
