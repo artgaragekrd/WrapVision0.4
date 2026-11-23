@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         bodyModeButton = findViewById(R.id.bodyModeButton)
         partsModeButton = findViewById(R.id.partsModeButton)
 
-        // ЕДИНЫЙ СТИЛЬ ВСЕХ ШЕСТИ КНОПОК
+        // ЕДИНЫЙ МЕТАЛЛИЧЕСКИЙ СТИЛЬ ВСЕХ ШЕСТИ КНОПОК
 
         applyMetalButtonStyle(
             findViewById(R.id.startPreviewButton)
@@ -111,15 +111,21 @@ class MainActivity : AppCompatActivity() {
 
         colorCode.text = selectedColorCode
 
+        // ЗАПУСК ПРОСМОТРА
+
         findViewById<Button>(R.id.startPreviewButton)
             .setOnClickListener {
                 requestCamera()
             }
 
+        // ВЫБОР ЦВЕТА
+
         findViewById<Button>(R.id.chooseColorButton)
             .setOnClickListener {
                 colorPicker.launch("image/*")
             }
+
+        // МОИ ПРОЕКТЫ
 
         findViewById<Button>(R.id.projectsButton)
             .setOnClickListener {
@@ -130,15 +136,21 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
 
+        // ВОЗВРАТ НА ГЛАВНЫЙ ЭКРАН
+
         findViewById<Button>(R.id.backHomeButton)
             .setOnClickListener {
                 returnHome()
             }
 
+        // ВЕСЬ КУЗОВ
+
         bodyModeButton.setOnClickListener {
             selectedMode = "body"
             updateModeButtons()
         }
+
+        // ПО ДЕТАЛЯМ
 
         partsModeButton.setOnClickListener {
             selectedMode = "parts"
@@ -148,7 +160,7 @@ class MainActivity : AppCompatActivity() {
         updateModeButtons()
     }
 
-    // ЕДИНЫЙ МЕТАЛЛИЧЕСКИЙ СТИЛЬ
+    // ЕДИНЫЙ СТИЛЬ DARK BRUSHED TITANIUM
 
     private fun applyMetalButtonStyle(button: Button) {
 
@@ -162,9 +174,13 @@ class MainActivity : AppCompatActivity() {
 
         button.backgroundTintList = null
 
+        // ЦВЕТ НАДПИСЕЙ
+
         button.setTextColor(
             Color.rgb(30, 40, 49)
         )
+
+        // СПОРТИВНЫЙ ШРИФТ
 
         button.typeface = Typeface.create(
             "sans-serif-condensed",
@@ -172,16 +188,26 @@ class MainActivity : AppCompatActivity() {
         )
 
         button.letterSpacing = 0.09f
-
         button.isAllCaps = false
+
+        // ГОЛУБЫЕ ИКОНКИ
+
+        button.compoundDrawableTintList =
+            ColorStateList.valueOf(
+                Color.rgb(0, 174, 255)
+            )
 
         button.stateListAnimator = null
     }
+
+    // ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ
 
     private fun updateModeButtons() {
         bodyModeButton.isSelected = selectedMode == "body"
         partsModeButton.isSelected = selectedMode == "parts"
     }
+
+    // ПРОВЕРКА РАЗРЕШЕНИЯ КАМЕРЫ
 
     private fun requestCamera() {
         if (
@@ -195,6 +221,8 @@ class MainActivity : AppCompatActivity() {
             cameraPermission.launch(Manifest.permission.CAMERA)
         }
     }
+
+    // ЗАПУСК КАМЕРЫ
 
     private fun openCamera() {
         homeScreen.visibility = View.GONE
@@ -233,6 +261,8 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
+    // ВОЗВРАТ НА ГЛАВНЫЙ ЭКРАН
+
     private fun returnHome() {
         cameraProvider?.unbindAll()
 
@@ -240,6 +270,8 @@ class MainActivity : AppCompatActivity() {
         cameraScreen.visibility = View.GONE
         homeScreen.visibility = View.VISIBLE
     }
+
+    // ОБРАБОТКА ФОТОГРАФИИ И ВЫБОР ЦВЕТА
 
     private fun readSampleColor(uri: Uri) {
         var bitmap: Bitmap? = null
@@ -342,10 +374,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // ОСВОБОЖДЕНИЕ КАМЕРЫ
+
     override fun onDestroy() {
         cameraProvider?.unbindAll()
         super.onDestroy()
     }
+
+    // ОБРАБОТКА СИСТЕМНОЙ КНОПКИ НАЗАД
 
     @Deprecated("Deprecated in Android")
     override fun onBackPressed() {
