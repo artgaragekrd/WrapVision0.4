@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         bodyModeButton = findViewById(R.id.bodyModeButton)
         partsModeButton = findViewById(R.id.partsModeButton)
 
-        // ЕДИНЫЙ МЕТАЛЛИЧЕСКИЙ СТИЛЬ ВСЕХ ШЕСТИ КНОПОК
+        // ЕДИНЫЙ СТИЛЬ ВСЕХ ШЕСТИ КНОПОК
 
         applyMetalButtonStyle(
             findViewById(R.id.startPreviewButton)
@@ -95,13 +96,8 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.projectsButton)
         )
 
-        applyMetalButtonStyle(
-            bodyModeButton
-        )
-
-        applyMetalButtonStyle(
-            partsModeButton
-        )
+        applyMetalButtonStyle(bodyModeButton)
+        applyMetalButtonStyle(partsModeButton)
 
         applyMetalButtonStyle(
             findViewById(R.id.backHomeButton)
@@ -152,7 +148,7 @@ class MainActivity : AppCompatActivity() {
         updateModeButtons()
     }
 
-    // ПРИНУДИТЕЛЬНОЕ ПРИМЕНЕНИЕ ЕДИНОГО МЕТАЛЛИЧЕСКОГО ФОНА
+    // ЕДИНЫЙ МЕТАЛЛИЧЕСКИЙ СТИЛЬ
 
     private fun applyMetalButtonStyle(button: Button) {
 
@@ -161,14 +157,23 @@ class MainActivity : AppCompatActivity() {
         button.background =
             ContextCompat.getDrawable(
                 this,
-                R.drawable.bg_button_primary
+                R.drawable.bg_button_metal
             )
 
         button.backgroundTintList = null
 
         button.setTextColor(
-            Color.rgb(32, 42, 52)
+            Color.rgb(30, 40, 49)
         )
+
+        button.typeface = Typeface.create(
+            "sans-serif-condensed",
+            Typeface.BOLD
+        )
+
+        button.letterSpacing = 0.09f
+
+        button.isAllCaps = false
 
         button.stateListAnimator = null
     }
