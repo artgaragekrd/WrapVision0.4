@@ -7,8 +7,6 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Shader
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -81,12 +79,6 @@ class MainActivity : AppCompatActivity() {
         bodyModeButton = findViewById(R.id.bodyModeButton)
         partsModeButton = findViewById(R.id.partsModeButton)
 
-        val logo = findViewById<TextView>(R.id.logo)
-        val logoEmblem = findViewById<TextView>(R.id.logoEmblem)
-
-        applyMetallicEffect(logo)
-        applyMetallicEffect(logoEmblem)
-
         homeScreen.visibility = View.VISIBLE
         cameraScreen.visibility = View.GONE
 
@@ -125,54 +117,6 @@ class MainActivity : AppCompatActivity() {
         partsModeButton.setOnClickListener {
             selectedMode = "parts"
             updateModeButtons()
-        }
-    }
-
-    // МЕТАЛЛИЧЕСКИЙ ЭФФЕКТ ЛОГОТИПА
-
-    private fun applyMetallicEffect(view: TextView) {
-        view.post {
-
-            val height = view.height.toFloat().coerceAtLeast(1f)
-
-            val metallicColors = intArrayOf(
-                Color.rgb(75, 91, 111),
-                Color.rgb(215, 226, 240),
-                Color.WHITE,
-                Color.rgb(155, 174, 195),
-                Color.rgb(245, 250, 255),
-                Color.rgb(95, 117, 143),
-                Color.rgb(190, 211, 232)
-            )
-
-            val positions = floatArrayOf(
-                0.0f,
-                0.18f,
-                0.32f,
-                0.48f,
-                0.62f,
-                0.82f,
-                1.0f
-            )
-
-            view.paint.shader = LinearGradient(
-                0f,
-                0f,
-                0f,
-                height,
-                metallicColors,
-                positions,
-                Shader.TileMode.CLAMP
-            )
-
-            view.setShadowLayer(
-                5f,
-                0f,
-                1f,
-                Color.rgb(100, 175, 235)
-            )
-
-            view.invalidate()
         }
     }
 
