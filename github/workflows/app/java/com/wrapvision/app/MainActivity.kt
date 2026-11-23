@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
         colorCode.text = selectedColorCode
     }
 
-    // ПЕРЕКЛЮЧЕНИЕ РЕЖИМА ПОКРАСКИ
+    // ПЕРЕКЛЮЧЕНИЕ РЕЖИМА
 
     private fun updateModeButtons() {
 
