@@ -7,8 +7,6 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Shader
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -31,18 +29,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var colorSwatch: View
     private lateinit var colorCode: TextView
+
     private lateinit var bodyModeButton: Button
     private lateinit var partsModeButton: Button
-    private lateinit var logo: TextView
 
     private var cameraProvider: ProcessCameraProvider? = null
 
-    private var selectedColor: Int =
-        Color.rgb(40, 45, 55)
-
-    private var selectedColorCode =
-        "ЦВЕТ НЕ ВЫБРАН"
-
+    private var selectedColor: Int = Color.rgb(40, 45, 55)
+    private var selectedColorCode = "ЦВЕТ НЕ ВЫБРАН"
     private var selectedMode = "body"
 
     private val cameraPermission =
@@ -86,11 +80,6 @@ class MainActivity : AppCompatActivity() {
 
         bodyModeButton = findViewById(R.id.bodyModeButton)
         partsModeButton = findViewById(R.id.partsModeButton)
-
-        logo = findViewById(R.id.logo)
-
-        // ПОЛИРОВАННЫЙ МЕТАЛЛИЧЕСКИЙ ЛОГОТИП
-        applyMetallicLogo(logo)
 
         homeScreen.visibility = View.VISIBLE
         cameraScreen.visibility = View.GONE
@@ -137,70 +126,12 @@ class MainActivity : AppCompatActivity() {
         updateModeButtons()
     }
 
-    // ПОЛИРОВАННЫЙ СЕРЕБРИСТЫЙ ХРОМ
-    private fun applyMetallicLogo(logo: TextView) {
-
-        logo.post {
-
-            val height = logo.height.toFloat()
-                .coerceAtLeast(1f)
-
-            val chromeColors = intArrayOf(
-
-                Color.rgb(95, 108, 124),
-                Color.rgb(175, 190, 207),
-                Color.rgb(238, 245, 253),
-                Color.rgb(255, 255, 255),
-                Color.rgb(193, 207, 224),
-                Color.rgb(135, 151, 171),
-                Color.rgb(220, 231, 244),
-                Color.rgb(248, 251, 255)
-            )
-
-            val positions = floatArrayOf(
-                0.00f,
-                0.16f,
-                0.29f,
-                0.39f,
-                0.53f,
-                0.69f,
-                0.85f,
-                1.00f
-            )
-
-            logo.paint.shader = LinearGradient(
-                0f,
-                0f,
-                0f,
-                height,
-                chromeColors,
-                positions,
-                Shader.TileMode.CLAMP
-            )
-
-            // МЯГКОЕ ГОЛУБОЕ СВЕЧЕНИЕ
-            logo.setShadowLayer(
-                9f,
-                0f,
-                0f,
-                Color.argb(65, 110, 185, 255)
-            )
-
-            logo.invalidate()
-        }
-    }
-
     private fun updateModeButtons() {
-
-        bodyModeButton.isSelected =
-            selectedMode == "body"
-
-        partsModeButton.isSelected =
-            selectedMode == "parts"
+        bodyModeButton.isSelected = selectedMode == "body"
+        partsModeButton.isSelected = selectedMode == "parts"
     }
 
     private fun requestCamera() {
-
         if (
             ContextCompat.checkSelfPermission(
                 this,
@@ -209,25 +140,19 @@ class MainActivity : AppCompatActivity() {
         ) {
             openCamera()
         } else {
-            cameraPermission.launch(
-                Manifest.permission.CAMERA
-            )
+            cameraPermission.launch(Manifest.permission.CAMERA)
         }
     }
 
     private fun openCamera() {
-
         homeScreen.visibility = View.GONE
         cameraScreen.visibility = View.VISIBLE
         cameraPreview.visibility = View.VISIBLE
 
-        val future =
-            ProcessCameraProvider.getInstance(this)
+        val future = ProcessCameraProvider.getInstance(this)
 
         future.addListener({
-
             try {
-
                 val provider = future.get()
                 cameraProvider = provider
 
@@ -245,7 +170,6 @@ class MainActivity : AppCompatActivity() {
                 )
 
             } catch (e: Exception) {
-
                 Toast.makeText(
                     this,
                     "Не удалось запустить камеру",
@@ -254,12 +178,10 @@ class MainActivity : AppCompatActivity() {
 
                 returnHome()
             }
-
         }, ContextCompat.getMainExecutor(this))
     }
 
     private fun returnHome() {
-
         cameraProvider?.unbindAll()
 
         cameraPreview.visibility = View.GONE
@@ -268,30 +190,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun readSampleColor(uri: Uri) {
-
         var bitmap: Bitmap? = null
 
         try {
-
             val bounds = BitmapFactory.Options().apply {
                 inJustDecodeBounds = true
             }
 
             contentResolver.openInputStream(uri)?.use {
-                BitmapFactory.decodeStream(
-                    it,
-                    null,
-                    bounds
-                )
+                BitmapFactory.decodeStream(it, null, bounds)
             }
 
-            if (
-                bounds.outWidth <= 0 ||
-                bounds.outHeight <= 0
-            ) {
-                throw IllegalArgumentException(
-                    "Invalid image"
-                )
+            if (bounds.outWidth <= 0 || bounds.outHeight <= 0) {
+                throw IllegalArgumentException("Invalid image")
             }
 
             var sample = 1
@@ -307,19 +218,12 @@ class MainActivity : AppCompatActivity() {
                 inSampleSize = sample
             }
 
-            bitmap =
-                contentResolver.openInputStream(uri)?.use {
-                    BitmapFactory.decodeStream(
-                        it,
-                        null,
-                        options
-                    )
-                }
+            bitmap = contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, options)
+            }
 
             val image = bitmap
-                ?: throw IllegalArgumentException(
-                    "No bitmap"
-                )
+                ?: throw IllegalArgumentException("No bitmap")
 
             val left = image.width / 3
             val right = image.width * 2 / 3
@@ -337,9 +241,7 @@ class MainActivity : AppCompatActivity() {
             )
 
             for (y in top until bottom step step) {
-
                 for (x in left until right step step) {
-
                     val pixel = image.getPixel(x, y)
 
                     red += Color.red(pixel)
@@ -351,9 +253,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (count == 0L) {
-                throw IllegalArgumentException(
-                    "Empty sample"
-                )
+                throw IllegalArgumentException("Empty sample")
             }
 
             selectedColor = Color.rgb(
@@ -379,7 +279,6 @@ class MainActivity : AppCompatActivity() {
             ).show()
 
         } catch (e: Exception) {
-
             Toast.makeText(
                 this,
                 "Не удалось обработать изображение",
@@ -387,21 +286,17 @@ class MainActivity : AppCompatActivity() {
             ).show()
 
         } finally {
-
             bitmap?.recycle()
         }
     }
 
     override fun onDestroy() {
-
         cameraProvider?.unbindAll()
-
         super.onDestroy()
     }
 
     @Deprecated("Deprecated in Android")
     override fun onBackPressed() {
-
         if (
             ::cameraScreen.isInitialized &&
             cameraScreen.visibility == View.VISIBLE
