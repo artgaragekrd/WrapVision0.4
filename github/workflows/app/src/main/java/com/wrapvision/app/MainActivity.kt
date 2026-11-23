@@ -82,26 +82,32 @@ class MainActivity : AppCompatActivity() {
         bodyModeButton = findViewById(R.id.bodyModeButton)
         partsModeButton = findViewById(R.id.partsModeButton)
 
-        // ЕДИНЫЙ СТИЛЬ DARK NEON STUDIO ДЛЯ ВСЕХ ШЕСТИ КНОПОК
+        // ЕДИНЫЙ СТИЛЬ DARK NEON STUDIO
 
-        applyNeonButtonStyle(
-            findViewById(R.id.startPreviewButton)
-        )
+        val startPreviewButton =
+            findViewById<Button>(R.id.startPreviewButton)
 
-        applyNeonButtonStyle(
-            findViewById(R.id.chooseColorButton)
-        )
+        val chooseColorButton =
+            findViewById<Button>(R.id.chooseColorButton)
 
-        applyNeonButtonStyle(
-            findViewById(R.id.projectsButton)
-        )
+        val projectsButton =
+            findViewById<Button>(R.id.projectsButton)
 
+        val backHomeButton =
+            findViewById<Button>(R.id.backHomeButton)
+
+        applyNeonButtonStyle(startPreviewButton)
+        applyNeonButtonStyle(chooseColorButton)
+        applyNeonButtonStyle(projectsButton)
         applyNeonButtonStyle(bodyModeButton)
         applyNeonButtonStyle(partsModeButton)
+        applyNeonButtonStyle(backHomeButton)
 
-        applyNeonButtonStyle(
-            findViewById(R.id.backHomeButton)
-        )
+        // УБИРАЕМ ИКОНКИ С ТРЁХ ОСНОВНЫХ КНОПОК
+
+        removeButtonIcons(startPreviewButton)
+        removeButtonIcons(chooseColorButton)
+        removeButtonIcons(projectsButton)
 
         homeScreen.visibility = View.VISIBLE
         cameraScreen.visibility = View.GONE
@@ -113,35 +119,31 @@ class MainActivity : AppCompatActivity() {
 
         // НАЧАТЬ ПРОСМОТР
 
-        findViewById<Button>(R.id.startPreviewButton)
-            .setOnClickListener {
-                requestCamera()
-            }
+        startPreviewButton.setOnClickListener {
+            requestCamera()
+        }
 
         // ВЫБРАТЬ ЦВЕТ
 
-        findViewById<Button>(R.id.chooseColorButton)
-            .setOnClickListener {
-                colorPicker.launch("image/*")
-            }
+        chooseColorButton.setOnClickListener {
+            colorPicker.launch("image/*")
+        }
 
         // МОИ ПРОЕКТЫ
 
-        findViewById<Button>(R.id.projectsButton)
-            .setOnClickListener {
-                Toast.makeText(
-                    this,
-                    "Раздел проектов будет добавлен следующим этапом",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        projectsButton.setOnClickListener {
+            Toast.makeText(
+                this,
+                "Раздел проектов будет добавлен следующим этапом",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
 
         // ВОЗВРАТ НА ГЛАВНЫЙ ЭКРАН
 
-        findViewById<Button>(R.id.backHomeButton)
-            .setOnClickListener {
-                returnHome()
-            }
+        backHomeButton.setOnClickListener {
+            returnHome()
+        }
 
         // РЕЖИМ ВЕСЬ КУЗОВ
 
@@ -203,6 +205,24 @@ class MainActivity : AppCompatActivity() {
             5f * resources.displayMetrics.density
 
         button.stateListAnimator = null
+    }
+
+    // УДАЛЕНИЕ ИКОНОК С КНОПКИ
+
+    private fun removeButtonIcons(button: Button) {
+        button.setCompoundDrawables(
+            null,
+            null,
+            null,
+            null
+        )
+
+        button.setCompoundDrawablesRelative(
+            null,
+            null,
+            null,
+            null
+        )
     }
 
     // ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ
