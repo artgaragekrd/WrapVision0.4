@@ -1,11 +1,21 @@
 
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/bg_studio">
+    android:background="#050A12">
+
+    <!-- ФОНОВАЯ СТУДИЯ -->
+    <ImageView
+        android:id="@+id/studioBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/studio_background"
+        android:scaleType="centerCrop"
+        android:contentDescription="Студия WrapVision" />
 
     <!-- ГЛАВНЫЙ ЭКРАН -->
     <LinearLayout
@@ -19,45 +29,15 @@
         android:paddingTop="5dp"
         android:paddingBottom="12dp">
 
-        <!-- ЭМБЛЕМА W -->
-        <TextView
-            android:id="@+id/logoEmblem"
-            android:layout_width="wrap_content"
-            android:layout_height="57dp"
-            android:text="W"
-            android:gravity="center"
-            android:textColor="#EAF5FF"
-            android:textSize="53sp"
-            android:textStyle="bold"
-            android:shadowColor="#168BFF"
-            android:shadowRadius="16"
-            android:letterSpacing="0.04" />
-
-        <!-- ЛОГОТИП -->
-        <TextView
-            android:id="@+id/logo"
+        <!-- ФИРМЕННЫЙ ЛОГОТИП -->
+        <ImageView
+            android:id="@+id/logoImage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="WRAPVISION"
-            android:textColor="#EAF3FF"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.10"
-            android:shadowColor="#62B9FF"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="12" />
-
-        <!-- ПОДЗАГОЛОВОК -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:text="P R E M I U M   S T U D I O"
-            android:textColor="#B8D5F5"
-            android:textSize="11sp"
-            android:letterSpacing="0.16" />
+            android:layout_height="150dp"
+            android:src="@drawable/wrapvision_logo"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:contentDescription="WRAPVISION PREMIUM STUDIO" />
 
         <!-- АВТОМОБИЛЬ -->
         <FrameLayout
