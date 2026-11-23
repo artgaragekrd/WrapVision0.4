@@ -82,24 +82,24 @@ class MainActivity : AppCompatActivity() {
         bodyModeButton = findViewById(R.id.bodyModeButton)
         partsModeButton = findViewById(R.id.partsModeButton)
 
-        // ЕДИНЫЙ МЕТАЛЛИЧЕСКИЙ СТИЛЬ ВСЕХ ШЕСТИ КНОПОК
+        // ЕДИНЫЙ СТИЛЬ DARK NEON STUDIO ДЛЯ ВСЕХ ШЕСТИ КНОПОК
 
-        applyMetalButtonStyle(
+        applyNeonButtonStyle(
             findViewById(R.id.startPreviewButton)
         )
 
-        applyMetalButtonStyle(
+        applyNeonButtonStyle(
             findViewById(R.id.chooseColorButton)
         )
 
-        applyMetalButtonStyle(
+        applyNeonButtonStyle(
             findViewById(R.id.projectsButton)
         )
 
-        applyMetalButtonStyle(bodyModeButton)
-        applyMetalButtonStyle(partsModeButton)
+        applyNeonButtonStyle(bodyModeButton)
+        applyNeonButtonStyle(partsModeButton)
 
-        applyMetalButtonStyle(
+        applyNeonButtonStyle(
             findViewById(R.id.backHomeButton)
         )
 
@@ -111,14 +111,14 @@ class MainActivity : AppCompatActivity() {
 
         colorCode.text = selectedColorCode
 
-        // ЗАПУСК ПРОСМОТРА
+        // НАЧАТЬ ПРОСМОТР
 
         findViewById<Button>(R.id.startPreviewButton)
             .setOnClickListener {
                 requestCamera()
             }
 
-        // ВЫБОР ЦВЕТА
+        // ВЫБРАТЬ ЦВЕТ
 
         findViewById<Button>(R.id.chooseColorButton)
             .setOnClickListener {
@@ -143,14 +143,14 @@ class MainActivity : AppCompatActivity() {
                 returnHome()
             }
 
-        // ВЕСЬ КУЗОВ
+        // РЕЖИМ ВЕСЬ КУЗОВ
 
         bodyModeButton.setOnClickListener {
             selectedMode = "body"
             updateModeButtons()
         }
 
-        // ПО ДЕТАЛЯМ
+        // РЕЖИМ ПО ДЕТАЛЯМ
 
         partsModeButton.setOnClickListener {
             selectedMode = "parts"
@@ -160,24 +160,24 @@ class MainActivity : AppCompatActivity() {
         updateModeButtons()
     }
 
-    // ЕДИНЫЙ СТИЛЬ DARK BRUSHED TITANIUM
+    // ЕДИНЫЙ СТИЛЬ DARK NEON STUDIO
 
-    private fun applyMetalButtonStyle(button: Button) {
+    private fun applyNeonButtonStyle(button: Button) {
 
         button.backgroundTintList = null
 
         button.background =
             ContextCompat.getDrawable(
                 this,
-                R.drawable.bg_button_metal
+                R.drawable.bg_button_neon
             )
 
         button.backgroundTintList = null
 
-        // ЦВЕТ НАДПИСЕЙ
+        // БЕЛЫЕ НАДПИСИ
 
         button.setTextColor(
-            Color.rgb(30, 40, 49)
+            Color.rgb(235, 246, 255)
         )
 
         // СПОРТИВНЫЙ ШРИФТ
@@ -187,15 +187,20 @@ class MainActivity : AppCompatActivity() {
             Typeface.BOLD
         )
 
-        button.letterSpacing = 0.09f
+        button.letterSpacing = 0.07f
         button.isAllCaps = false
 
         // ГОЛУБЫЕ ИКОНКИ
 
         button.compoundDrawableTintList =
             ColorStateList.valueOf(
-                Color.rgb(0, 174, 255)
+                Color.rgb(0, 185, 255)
             )
+
+        // МЯГКИЙ ОБЪЁМ
+
+        button.elevation =
+            5f * resources.displayMetrics.density
 
         button.stateListAnimator = null
     }
