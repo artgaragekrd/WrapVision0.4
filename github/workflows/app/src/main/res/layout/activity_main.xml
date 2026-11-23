@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,13 +14,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- ЕДИНЫЙ ФИРМЕННЫЙ МАКЕТ -->
+        <!-- АДАПТИВНЫЙ ФИРМЕННЫЙ ФОН -->
         <ImageView
             android:id="@+id/studioBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/wrapvision_home"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:background="#050A12"
             android:contentDescription="WrapVision Premium Studio" />
 
         <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
