@@ -183,6 +183,16 @@
             android:layout_height="match_parent"
             app:scaleType="fillCenter" />
 
+        <!-- СЛОЙ ДЛЯ МАСКИ АВТОМОБИЛЯ -->
+        <View
+            android:id="@+id/carMaskOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:visibility="visible"
+            android:clickable="false"
+            android:focusable="false" />
+
         <!-- ЗАГОЛОВОК -->
         <LinearLayout
             android:layout_width="match_parent"
