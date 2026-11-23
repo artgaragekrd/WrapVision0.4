@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ВЫБРАННЫЙ ЦВЕТ
+    // ОБНОВЛЕНИЕ ВЫБРАННОГО ЦВЕТА
 
     private fun updateSelectedColor() {
         colorSwatch.backgroundTintList =
@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
         colorCode.text = selectedColorCode
     }
 
-    // ПОДСВЕТКА ВЫБРАННОГО РЕЖИМА
+    // ПЕРЕКЛЮЧЕНИЕ РЕЖИМА ПОКРАСКИ
 
     private fun updateModeButtons() {
 
@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ОТКРЫТИЕ КАМЕРЫ
+    // ЗАПУСК КАМЕРЫ
 
     private fun openCamera() {
 
