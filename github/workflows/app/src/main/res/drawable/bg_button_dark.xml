@@ -3,30 +3,58 @@
 
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="13dp"/>
+            <corners android:radius="15dp"/>
             <gradient
                 android:angle="270"
-                android:startColor="#66717B"
-                android:centerColor="#87929C"
-                android:endColor="#3D4650"/>
+                android:startColor="#77828D"
+                android:centerColor="#AAB4BE"
+                android:endColor="#626D78"/>
             <stroke
-                android:width="1.5dp"
-                android:color="#DDE5EC"/>
+                android:width="2dp"
+                android:color="#DCE6EF"/>
         </shape>
     </item>
 
     <item>
-        <shape android:shape="rectangle">
-            <corners android:radius="13dp"/>
-            <gradient
-                android:angle="270"
-                android:startColor="#AEB8C1"
-                android:centerColor="#596570"
-                android:endColor="#252D35"/>
-            <stroke
-                android:width="1.5dp"
-                android:color="#AEBBC7"/>
-        </shape>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="15dp"/>
+                    <gradient
+                        android:angle="270"
+                        android:startColor="#F8FBFE"
+                        android:centerColor="#C5CED7"
+                        android:endColor="#8995A1"/>
+                    <stroke
+                        android:width="2dp"
+                        android:color="#FFFFFF"/>
+                </shape>
+            </item>
+
+            <item android:left="9dp" android:right="9dp"
+                android:top="8dp">
+                <shape android:shape="rectangle">
+                    <size android:height="1dp"/>
+                    <solid android:color="#99FFFFFF"/>
+                </shape>
+            </item>
+
+            <item android:left="9dp" android:right="9dp"
+                android:top="15dp">
+                <shape android:shape="rectangle">
+                    <size android:height="1dp"/>
+                    <solid android:color="#55808B96"/>
+                </shape>
+            </item>
+
+            <item android:left="9dp" android:right="9dp"
+                android:top="23dp">
+                <shape android:shape="rectangle">
+                    <size android:height="1dp"/>
+                    <solid android:color="#66FFFFFF"/>
+                </shape>
+            </item>
+        </layer-list>
     </item>
 
 </selector>
