@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         bodyModeButton = findViewById(R.id.bodyModeButton)
         partsModeButton = findViewById(R.id.partsModeButton)
 
-        // ЕДИНОЕ МЕТАЛЛИЧЕСКОЕ ОФОРМЛЕНИЕ ВСЕХ КНОПОК
+        // ЕДИНОЕ МЕТАЛЛИЧЕСКОЕ ОФОРМЛЕНИЕ
         applyMetalButtonStyle(
             findViewById(R.id.startPreviewButton)
         )
@@ -105,6 +105,10 @@ class MainActivity : AppCompatActivity() {
         applyMetalButtonStyle(
             findViewById(R.id.backHomeButton)
         )
+
+        // ВРЕМЕННЫЙ ДИАГНОСТИЧЕСКИЙ ТЕСТ
+        findViewById<Button>(R.id.startPreviewButton)
+            .setBackgroundColor(Color.MAGENTA)
 
         homeScreen.visibility = View.VISIBLE
         cameraScreen.visibility = View.GONE
@@ -151,7 +155,7 @@ class MainActivity : AppCompatActivity() {
         updateModeButtons()
     }
 
-    // ПРИНУДИТЕЛЬНО НАЗНАЧАЕМ ОДИН МЕТАЛЛИЧЕСКИЙ ФОН
+    // ПРИНУДИТЕЛЬНО НАЗНАЧАЕМ МЕТАЛЛИЧЕСКИЙ ФОН
     private fun applyMetalButtonStyle(button: Button) {
 
         button.backgroundTintList = null
