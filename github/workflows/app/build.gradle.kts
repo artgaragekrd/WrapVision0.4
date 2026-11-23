@@ -38,5 +38,5 @@ dependencies {
     implementation("androidx.camera:camera-view:1.4.2")
 
     // LiteRT — движок искусственного интеллекта
-    implementation("com.google.ai.edge.litert:litert:2.3.2")
+    implementation("com.google.ai.edge.litert:litert:1.4.2")
 }
