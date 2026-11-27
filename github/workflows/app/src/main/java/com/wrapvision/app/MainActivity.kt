@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
+import android.util.Size
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -17,9 +18,13 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import java.io.File
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var homeScreen: View
     private lateinit var cameraScreen: View
     private lateinit var cameraPreview: PreviewView
+    private lateinit var maskOverlay: CarMaskOverlayView
 
     private lateinit var colorSwatch: View
     private lateinit var colorCode: TextView
@@ -35,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var partsModeButton: Button
 
     private var cameraProvider: ProcessCameraProvider? = null
+    private var segmentationEngine: WrapVisionSegmentationEngine? = null
+    private var analysisExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     private var selectedColor: Int = Color.rgb(40, 45, 55)
     private var selectedColorCode = "ЦВЕТ НЕ ВЫБРАН"
@@ -54,6 +62,10 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
+
+    private val modelPicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) installModel(uri)
+    }
 
     private val colorPicker =
         registerForActivityResult(
@@ -75,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         homeScreen = findViewById(R.id.homeScreen)
         cameraScreen = findViewById(R.id.cameraScreen)
         cameraPreview = findViewById(R.id.cameraPreview)
+        maskOverlay = findViewById(R.id.carMaskOverlay)
 
         colorSwatch = findViewById(R.id.colorSwatch)
         colorCode = findViewById(R.id.colorCode)
@@ -95,6 +108,7 @@ class MainActivity : AppCompatActivity() {
 
         val backHomeButton =
             findViewById<Button>(R.id.backHomeButton)
+        val loadModelButton = findViewById<Button>(R.id.loadModelButton)
 
         applyNeonButtonStyle(startPreviewButton)
         applyNeonButtonStyle(chooseColorButton)
@@ -102,6 +116,7 @@ class MainActivity : AppCompatActivity() {
         applyNeonButtonStyle(bodyModeButton)
         applyNeonButtonStyle(partsModeButton)
         applyNeonButtonStyle(backHomeButton)
+        applyNeonButtonStyle(loadModelButton)
 
         // УБИРАЕМ ИКОНКИ С ТРЁХ ОСНОВНЫХ КНОПОК
 
@@ -143,6 +158,9 @@ class MainActivity : AppCompatActivity() {
 
         backHomeButton.setOnClickListener {
             returnHome()
+        }
+        loadModelButton.setOnClickListener {
+            modelPicker.launch(arrayOf("application/octet-stream", "application/onnx", "*/*"))
         }
 
         // РЕЖИМ ВЕСЬ КУЗОВ
@@ -262,17 +280,31 @@ class MainActivity : AppCompatActivity() {
                 cameraProvider = provider
 
                 val preview = Preview.Builder().build()
-
-                preview.surfaceProvider =
-                    cameraPreview.surfaceProvider
-
+                preview.surfaceProvider = cameraPreview.surfaceProvider
                 provider.unbindAll()
-
-                provider.bindToLifecycle(
-                    this,
-                    CameraSelector.DEFAULT_BACK_CAMERA,
-                    preview
-                )
+                val engine = segmentationEngine
+                if (engine != null) {
+                    val analysis = ImageAnalysis.Builder()
+                        .setTargetResolution(Size(640, 480))
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                        .build()
+                    analysis.setAnalyzer(analysisExecutor, CameraMaskAnalyzer(
+                        engine = engine,
+                        executor = analysisExecutor,
+                        isWholeBodyMode = { selectedMode == "body" },
+                        selectedWrapColor = { selectedColor },
+                        onMaskReady = { bitmap ->
+                            runOnUiThread {
+                                if (cameraScreen.visibility == View.VISIBLE) maskOverlay.setOverlay(bitmap)
+                                else bitmap?.recycle()
+                            }
+                        }
+                    ))
+                    provider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
+                } else {
+                    provider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview)
+                    Toast.makeText(this, "Камера работает. Для нанесения цвета загрузите ONNX-модель.", Toast.LENGTH_LONG).show()
+                }
 
             } catch (e: Exception) {
                 Toast.makeText(
@@ -290,6 +322,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun returnHome() {
         cameraProvider?.unbindAll()
+        maskOverlay.clear()
 
         cameraPreview.visibility = View.GONE
         cameraScreen.visibility = View.GONE
@@ -399,10 +432,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // КОПИРОВАНИЕ МОДЕЛИ ИЗ ВЫБРАННОГО ФАЙЛА
+
+    private fun installModel(uri: Uri) {
+        Toast.makeText(this, "Копирую файл модели…", Toast.LENGTH_SHORT).show()
+        analysisExecutor.execute {
+            try {
+                val dir = File(filesDir, "models").apply { mkdirs() }
+                val target = File(dir, "wrapvision_seg_nano_fp32.onnx")
+                val temp = File(dir, "model.tmp")
+                contentResolver.openInputStream(uri)?.use { input ->
+                    temp.outputStream().use { output -> input.copyTo(output) }
+                } ?: throw IllegalStateException("Не удалось открыть выбранный файл")
+                if (target.exists()) target.delete()
+                if (!temp.renameTo(target)) throw IllegalStateException("Не удалось сохранить модель")
+                val loaded = WrapVisionSegmentationEngine(target)
+                val previous = segmentationEngine
+                segmentationEngine = loaded
+                previous?.close()
+                runOnUiThread {
+                    Toast.makeText(this, "Модель загружена. Перезапустите просмотр камеры.", Toast.LENGTH_LONG).show()
+                    if (cameraScreen.visibility == View.VISIBLE) {
+                        cameraProvider?.unbindAll()
+                        openCamera()
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this, "Ошибка загрузки модели: " + e.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
     // ОСВОБОЖДЕНИЕ КАМЕРЫ
 
     override fun onDestroy() {
         cameraProvider?.unbindAll()
+        maskOverlay.clear()
+        analysisExecutor.shutdown()
+        segmentationEngine?.close()
         super.onDestroy()
     }
 
