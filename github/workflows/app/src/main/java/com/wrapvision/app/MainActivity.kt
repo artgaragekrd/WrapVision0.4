@@ -178,6 +178,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateModeButtons()
+
+        // Автоматически открываем уже установленную модель при следующем запуске.
+        analysisExecutor.execute {
+            val installedModel = File(filesDir, "models/wrapvision_seg_nano_fp32.onnx")
+            if (installedModel.isFile && segmentationEngine == null) {
+                try {
+                    segmentationEngine = WrapVisionSegmentationEngine(installedModel)
+                } catch (_: Exception) {
+                    runOnUiThread {
+                        Toast.makeText(this, "Не удалось открыть сохранённую модель. Загрузите её заново.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
     }
 
     // ЕДИНЫЙ СТИЛЬ DARK NEON STUDIO
