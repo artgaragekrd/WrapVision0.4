@@ -11,8 +11,8 @@ android {
         applicationId = "com.wrapvision.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 5
-        versionName = "0.5"
+        versionCode = 6
+        versionName = "0.6"
     }
 
     compileOptions {
@@ -31,12 +31,12 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
 
-    // CameraX
+    // CameraX: preview + per-frame analysis
     implementation("androidx.camera:camera-core:1.4.2")
     implementation("androidx.camera:camera-camera2:1.4.2")
     implementation("androidx.camera:camera-lifecycle:1.4.2")
     implementation("androidx.camera:camera-view:1.4.2")
 
-    // LiteRT — движок искусственного интеллекта
-    implementation("com.google.ai.edge.litert:litert:1.4.2")
+    // ONNX Runtime: WrapVision RF-DETR segmentation model
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.32.0")
 }
