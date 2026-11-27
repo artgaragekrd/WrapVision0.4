@@ -35,7 +35,11 @@ class WrapVisionSegmentationEngine(
         val classId: Int,
         val className: String,
         val confidence: Float,
-        val mask: ByteArray
+        val mask: ByteArray,
+        val left: Int,
+        val top: Int,
+        val right: Int,
+        val bottom: Int
     )
 
     private val env = OrtEnvironment.getEnvironment()
@@ -115,18 +119,44 @@ class WrapVisionSegmentationEngine(
                     if (bestClass < 0 || bestScore < SCORE_THRESHOLD) continue
                     if (!WrapVisionClassMap.shouldApplyWrap(bestClass, wholeBodyMode)) continue
 
+                    // RF-DETR boxes are normalized cx,cy,w,h. Use them as a
+                    // conservative spatial guard so a mask cannot paint far outside
+                    // the detected vehicle part.
+                    val boxOffset = query * 4
+                    val cx = boxes[boxOffset].coerceIn(0f, 1f)
+                    val cy = boxes[boxOffset + 1].coerceIn(0f, 1f)
+                    val bw = boxes[boxOffset + 2].coerceIn(0f, 1f)
+                    val bh = boxes[boxOffset + 3].coerceIn(0f, 1f)
+                    if (bw <= 0f || bh <= 0f) continue
+                    val padX = bw * 0.08f
+                    val padY = bh * 0.08f
+                    val left = (((cx - bw / 2f - padX).coerceAtLeast(0f)) * source.width).toInt()
+                    val top = (((cy - bh / 2f - padY).coerceAtLeast(0f)) * source.height).toInt()
+                    val right = (((cx + bw / 2f + padX).coerceAtMost(1f)) * source.width).toInt()
+                    val bottom = (((cy + bh / 2f + padY).coerceAtMost(1f)) * source.height).toInt()
+                    if (right <= left || bottom <= top) continue
+
                     val offset = query * MASK_SIZE * MASK_SIZE
-                    val smallMask = maskLogits.copyOfRange(
-                        offset, offset + MASK_SIZE * MASK_SIZE
-                    )
+                    val smallMask = maskLogits.copyOfRange(offset, offset + MASK_SIZE * MASK_SIZE)
                     val fullMask = resizeMaskBilinear(smallMask, source.width, source.height)
+                    // Clamp the low-resolution mask to its corresponding detection box.
+                    for (y in 0 until source.height) {
+                        if (y < top || y >= bottom) {
+                            java.util.Arrays.fill(fullMask, y * source.width, (y + 1) * source.width, 0)
+                        } else {
+                            val row = y * source.width
+                            for (x in 0 until left) fullMask[row + x] = 0
+                            for (x in right until source.width) fullMask[row + x] = 0
+                        }
+                    }
                     if (fullMask.any { it.toInt() != 0 }) {
                         detections.add(
                             DetectionMask(
                                 bestClass,
                                 WrapVisionClassMap.classNames[bestClass],
                                 bestScore,
-                                fullMask
+                                fullMask,
+                                left, top, right, bottom
                             )
                         )
                     }
@@ -140,21 +170,36 @@ class WrapVisionSegmentationEngine(
 
     /** Creates a transparent ARGB overlay from the selected instance masks. */
     fun renderOverlay(
-        width: Int,
-        height: Int,
+        source: Bitmap,
         detections: List<DetectionMask>,
         wrapColor: Int,
-        alpha: Int = 150
+        alpha: Int = 245
     ): Bitmap {
+        val width = source.width
+        val height = source.height
         val pixels = IntArray(width * height)
+        val baseR = Color.red(wrapColor)
+        val baseG = Color.green(wrapColor)
+        val baseB = Color.blue(wrapColor)
         val a = alpha.coerceIn(0, 255)
         for (detection in detections) {
             val mask = detection.mask
             if (mask.size != width * height) continue
             for (i in mask.indices) {
-                if (mask[i].toInt() != 0) {
-                    pixels[i] = Color.argb(a, Color.red(wrapColor), Color.green(wrapColor), Color.blue(wrapColor))
-                }
+                if (mask[i].toInt() == 0) continue
+                val original = source.getPixel(i % width, i / width)
+                // Transfer the selected wrap hue while retaining the source panel's
+                // light/shadow structure instead of laying a flat translucent tint.
+                val luminance = (0.2126f * Color.red(original) +
+                    0.7152f * Color.green(original) +
+                    0.0722f * Color.blue(original)) / 255f
+                val shade = (0.38f + luminance * 0.92f).coerceIn(0.38f, 1.28f)
+                pixels[i] = Color.argb(
+                    a,
+                    (baseR * shade).toInt().coerceIn(0, 255),
+                    (baseG * shade).toInt().coerceIn(0, 255),
+                    (baseB * shade).toInt().coerceIn(0, 255)
+                )
             }
         }
         return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888)
