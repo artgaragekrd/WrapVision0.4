@@ -38,7 +38,7 @@ class CameraMaskAnalyzer(
                     selectedWrapColor()
                 )
                 val overlay = engine.renderOverlay(
-                    upright.width, upright.height, masks, selectedWrapColor()
+                    upright, masks, selectedWrapColor()
                 )
                 onMaskReady(overlay)
             } finally {
