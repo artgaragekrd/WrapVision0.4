@@ -334,41 +334,52 @@ class MainActivity : AppCompatActivity() {
             val image = bitmap
                 ?: throw IllegalArgumentException("No bitmap")
 
-            val left = image.width / 3
-            val right = image.width * 2 / 3
-            val top = image.height / 3
-            val bottom = image.height * 2 / 3
+            // Sample a tighter central region. Median sampling is more resistant
+            // to background pixels, glare and small reflections than a plain mean.
+            val left = image.width * 35 / 100
+            val right = image.width * 65 / 100
+            val top = image.height * 35 / 100
+            val bottom = image.height * 65 / 100
 
-            var red = 0L
-            var green = 0L
-            var blue = 0L
-            var count = 0L
+            val reds = ArrayList<Int>()
+            val greens = ArrayList<Int>()
+            val blues = ArrayList<Int>()
 
             val step = maxOf(
                 1,
-                minOf(image.width, image.height) / 100
+                minOf(image.width, image.height) / 120
             )
 
             for (y in top until bottom step step) {
                 for (x in left until right step step) {
                     val pixel = image.getPixel(x, y)
+                    val r = Color.red(pixel)
+                    val g = Color.green(pixel)
+                    val b = Color.blue(pixel)
 
-                    red += Color.red(pixel)
-                    green += Color.green(pixel)
-                    blue += Color.blue(pixel)
-
-                    count++
+                    // Ignore nearly black/white extremes caused by shadows or glare.
+                    val brightness = (r + g + b) / 3
+                    if (brightness in 12..245) {
+                        reds.add(r)
+                        greens.add(g)
+                        blues.add(b)
+                    }
                 }
             }
 
-            if (count == 0L) {
-                throw IllegalArgumentException("Empty sample")
+            if (reds.isEmpty()) {
+                throw IllegalArgumentException("No usable color samples")
+            }
+
+            fun median(values: ArrayList<Int>): Int {
+                values.sort()
+                return values[values.size / 2]
             }
 
             selectedColor = Color.rgb(
-                (red / count).toInt(),
-                (green / count).toInt(),
-                (blue / count).toInt()
+                median(reds),
+                median(greens),
+                median(blues)
             )
 
             selectedColorCode = String.format(
